@@ -1,0 +1,50 @@
+## Interface: 60000
+## Version: 1.0
+## X-Curse-Packaged-Version: 1.0
+## X-Curse-Project-Name: oUF_Drak
+## X-Curse-Project-ID: ouf-drak
+## X-Curse-Repository-ID: wow/ouf-drak/mainline
+
+## Title: oUF: Drak
+## Notes: oUF-based combat HUD with many PvE-oriented features and a few options.
+
+## Author: Drak
+## X-Email: drak@derpydo.com
+## X-Copyright: Copyright (c) 2016 Drak. All rights reserved.
+## X-Website: http://www.wowinterface.com/downloads/info13993-oUFPhanx.html
+
+## Dependencies: oUF
+## OptionalDependencies: LibResInfo-1.0, LibSharedMedia-3.0, DrakConfigWidgets
+## SavedVariables: oUFDrakConfig, oUFDrakUnitConfig
+## SavedVariablesPerCharacter: oUFDrakAuraConfig
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibResInfo-1.0\LibResInfo-1.0.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+
+Features\MultiBar.lua
+Features\Orbs.lua
+
+Elements\AFK.lua
+Elements\AuraStack.lua
+Elements\BurningEmbers.lua
+Elements\CombatText.lua
+Elements\DemonicFury.lua
+Elements\DispelHighlight.lua
+Elements\ResInfo.lua
+Elements\WildMushrooms.lua
+
+Features\Border.lua
+Features\BurningEmbers.lua
+Features\Castbar.lua
+Features\EclipseBar.lua
+Features\Runes.lua
+Features\Tags.lua
+Features\Totems.lua
+
+Core.lua
+
+Auras.lua
+Functions.lua
+Frames.lua
