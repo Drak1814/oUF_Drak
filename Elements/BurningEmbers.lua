@@ -2,7 +2,7 @@
 	oUF_Drak
 	oUF-based Combat HUD for PvE.
 	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
-	https://github.com/SnarkyClark/oUF_Drak
+	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to display burning embers on oUF frames.
 

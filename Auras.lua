@@ -2,7 +2,7 @@
 	oUF_Drak
 	oUF-based Combat HUD for PvE.
 	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
-	https://github.com/SnarkyClark/oUF_Drak
+	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Filter settings stored as bitfields.
 	0x MODE EXTRAUNIT ROLEx2 SOURCEx2 DESTx2
