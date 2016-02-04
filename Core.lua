@@ -126,11 +126,10 @@ function Loader:ADDON_LOADED(event, addon)
 			end
 		end)
 	end
-
-	--debug("FastFocus:", ns.config.fastfocus)
 	
 	-- FastFocus Key
 	if (ns.config.fastfocus) then
+		--debug("Enabling FastFocus")
 		--Blizzard raid frame
 		hooksecurefunc("CompactUnitFrame_SetUpFrame", function(frame, ...)
 			if frame then
@@ -152,6 +151,9 @@ function Loader:ADDON_LOADED(event, addon)
 	-- Go
 	oUF:Factory(ns.Factory)
 	
+	-- Startup events
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+
 	-- Sounds for target/focus changing and PVP flagging
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
@@ -202,11 +204,23 @@ function Loader:ADDON_LOADED(event, addon)
 	end
 	
 	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak Loaded")
-	
+	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak: FastFocus " .. (ns.config.fastfocus and "Enabled" or "Disabled"))
+	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak: ExpandedZoom " ..(ns.config.expandzoom and "Enabled" or "Disabled"))
+			
 end
 
 ------------------------------------------------------------------------
 
+function Loader:PLAYER_ENTERING_WORLD(event)
+	--config = oUFDrakConfig
+	if (ns.config.expandzoom) then
+		--debug("Expanding Zoom")
+		ConsoleExec("CameraDistanceMaxFactor 3")
+		ConsoleExec("CameraDistanceMoveSpeed 40")
+		ConsoleExec("CameraDistanceSmoothSpeed 40")
+	end
+end
+	
 function Loader:PLAYER_LOGOUT(event)
 	local function cleanDB(db, defaults)
 		if type(db) ~= "table" then return {} end
