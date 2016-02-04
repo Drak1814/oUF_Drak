@@ -66,7 +66,7 @@ local function Spawn(self, unit, isSingle)
 	for k, v in pairs(ns.framePrototype) do
 		self[k] = v
 	end
-
+	
 	-------------------------
 	-- Border and backdrop --
 	-------------------------
@@ -773,6 +773,8 @@ local function Spawn(self, unit, isSingle)
 	end
 	self.overlay:SetFrameLevel(maxLevel + 1)
 
+	
+
 end
 
 
@@ -801,15 +803,17 @@ function ns.Factory(oUF)
 			local name = "oUFDrak" .. unit:gsub("%a", strupper, 1):gsub("target", "Target"):gsub("pet", "Pet")
 			if udata.point then
 				if udata.attributes then
-					-- debug("generating header for", unit)
+					--debug("generating header for", unit, unpack(udata.visible))
 					local w = config.width  * (udata.width  or 1)
 					local h = config.height * (udata.height or 1)
 					ns.headers[unit] = oUF:SpawnHeader(name, nil, udata.visible,
 						"oUF-initialConfigFunction", format(initialConfigFunction, w, h, w, h),
 						unpack(udata.attributes))
 				else
-					-- debug("generating frame for", unit)
+					--debug("generating frame for", unit)
 					ns.frames[unit] = oUF:Spawn(unit, name)
+					-- only show HUD during normal combat
+					RegisterStateDriver(ns.frames[unit]:GetParent(), 'visibility', "[combat,nopetbattle,novehicleui,nooverridebar] show; hide")
 				end
 			end
 		end
