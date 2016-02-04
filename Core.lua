@@ -130,18 +130,18 @@ function Loader:ADDON_LOADED(event, addon)
 	--debug("FastFocus:", ns.config.fastfocus)
 	
 	-- FastFocus Key
-	if (ns.config.fastfocus ~= 'NONE') then
+	if (ns.config.fastfocus) then
 		--Blizzard raid frame
 		hooksecurefunc("CompactUnitFrame_SetUpFrame", function(frame, ...)
 			if frame then
-				frame:SetAttribute(ns.config.fastfocus.."-type1", "focus")
+				frame:SetAttribute("shift-type1", "focus")
 			end
 		end)
 		-- World Models
 		local foc = CreateFrame("CheckButton", "FastFocuser", UIParent, "SecureActionButtonTemplate")
 		foc:SetAttribute("type1", "macro")
 		foc:SetAttribute("macrotext", "/focus mouseover")
-		SetOverrideBindingClick(FastFocuser, true, ns.config.fastfocus.."-BUTTON1", "FastFocuser")
+		SetOverrideBindingClick(FastFocuser, true, "SHIFT-BUTTON1", "FastFocuser")
 	end
 	
 	-- Cleanup

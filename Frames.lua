@@ -43,8 +43,8 @@ local function Spawn(self, unit, isSingle)
 	self:RegisterForClicks("AnyUp")
 	
 	-- FastFocus Key
-	if (ns.config.fastfocus ~= 'NONE') then	
-		self:SetAttribute(ns.config.fastfocus.."-type1", "focus")
+	if (ns.config.fastfocus) then	
+		self:SetAttribute("shift-type1", "focus")
 	end
 
 	local FRAME_WIDTH  = config.width  * (uconfig.width  or 1)
