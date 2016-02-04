@@ -40,7 +40,12 @@ local function Spawn(self, unit, isSingle)
 	self:HookScript("OnEnter", ns.UnitFrame_OnEnter)
 	self:HookScript("OnLeave", ns.UnitFrame_OnLeave)
 
-	--self:RegisterForClicks("anyup")
+	self:RegisterForClicks("AnyUp")
+	
+	-- FastFocus Key
+	if (ns.config.fastfocus ~= 'NONE') then	
+		self:SetAttribute(ns.config.fastfocus.."-type1", "focus")
+	end
 
 	local FRAME_WIDTH  = config.width  * (uconfig.width  or 1)
 	local FRAME_HEIGHT = config.height * (uconfig.height or 1)
