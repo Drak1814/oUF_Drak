@@ -32,11 +32,8 @@ local function Spawn(self, unit, isSingle)
 	local uconfig = ns.uconfig[unit]
 	self.spawnunit = unit
 
-	-- print("Spawn", self:GetName(), unit)
+	--debug("Spawn", self:GetName(), unit)
 	tinsert(ns.objects, self)
-
-	-- turn "boss2" into "boss" for example
-	unit = gsub(unit, "%d", "")
 
 	--self.menu = ns.UnitFrame_DropdownMenu
 
@@ -112,8 +109,7 @@ local function Spawn(self, unit, isSingle)
 		health.bg:SetVertexColor(r * healthBG, g * healthBG, b * healthBG)
 	end
 
-	-- Blizzard bug, UNIT_HEALTH doesn't fire for bossN units in 5.2+
-	health.frequentUpdates = true -- unit == "boss"
+	health.frequentUpdates = true
 
 	health.PostUpdate = ns.Health_PostUpdate
 	self:RegisterForMouseover(health)
@@ -213,7 +209,7 @@ local function Spawn(self, unit, isSingle)
 			power.bg:SetVertexColor(r * powerBG, g * powerBG, b * powerBG)
 		end
 
-		power.frequentUpdates = unit == "player" or unit == "target" or unit == "focus" or unit == "boss"
+		power.frequentUpdates = unit == "player" or unit == "target" or unit == "focus"
 		power.PostUpdate = ns.Power_PostUpdate
 	end
 
@@ -232,7 +228,7 @@ local function Spawn(self, unit, isSingle)
 		self.Combat = self.overlay:CreateTexture(nil, "OVERLAY")
 		self.Combat:SetPoint("RIGHT", self, "TOPRIGHT", 0, 6)
 		self.Combat:SetSize(32, 32)
-	elseif unit == "party" or unit == "target" then
+	elseif unit == "target" then
 		self.Status = ns.CreateFontString(self.overlay, 16, "RIGHT")
 		self.Status:SetPoint("RIGHT", self, "BOTTOMRIGHT", -2, 0)
 		self:Tag(self.Status, "[mastericon][leadericon]")
@@ -452,26 +448,6 @@ local function Spawn(self, unit, isSingle)
 	----------------
 	if unit == "player" and playerClass == "DRUID" and config.eclipseBar then
 		self.EclipseBar = ns.CreateEclipseBar(self)
-		--[[
-		local eclipseBar = ns.CreateStatusBar(self, 16, "CENTER")
-		eclipseBar:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, 0)
-		eclipseBar:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", 0, 0)
-		eclipseBar:SetHeight(FRAME_HEIGHT * config.powerHeight)
-
-		eclipseBar.value:Hide()
-		eclipseBar.value:SetPoint("CENTER", eclipseBar, 0, 1)
-		self:RegisterForMouseover(eclipseBar.value)
-
-		eclipseBar:Hide()
-		eclipseBar:SetScript("OnShow", ns.ExtraBar_OnShow)
-		eclipseBar:SetScript("OnHide", ns.ExtraBar_OnHide)
-		eclipseBar.borderOffset = 2
-
-		eclipseBar.bg.multiplier = config.powerBG
-
-		eclipseBar.PostUpdate = ns.Eclipse_PostUpdate
-		self.Eclipse = eclipseBar
-		]]
 	end
 
 	-----------
@@ -528,8 +504,6 @@ local function Spawn(self, unit, isSingle)
 		end
 	end
 
-
-
 	----------------
 	-- Phase icon --
 	----------------
@@ -557,35 +531,18 @@ local function Spawn(self, unit, isSingle)
 	end
 
 	-----------------------
-	-- Raid target icons --
+	-- Raid target icon --
 	-----------------------
-	self.RaidIcon = self.overlay:CreateTexture(nil, "OVERLAY")
-	self.RaidIcon:SetPoint("CENTER", self, 0, 0)
-	self.RaidIcon:SetSize(32, 32)
-
-	----------------------
-	-- Ready check icon --
-	----------------------
-	if unit == "player" or unit == "party" then
-		self.ReadyCheck = self.overlay:CreateTexture(nil, "OVERLAY")
-		self.ReadyCheck:SetPoint("CENTER", self)
-		self.ReadyCheck:SetSize(FRAME_HEIGHT, FRAME_HEIGHT)
+	if unit == "target" then
+		self.RaidIcon = self.overlay:CreateTexture(nil, "OVERLAY")
+		self.RaidIcon:SetPoint("CENTER", self, 0, 0)
+		self.RaidIcon:SetSize(32, 32)
 	end
-
-	----------------
-	-- Role icons --
-	----------------
-	if unit == "player" or unit == "party" then
-		self.LFDRole = self.overlay:CreateTexture(nil, "OVERLAY")
-		self.LFDRole:SetPoint("CENTER", self, unit == "player" and "LEFT" or "RIGHT", unit == "player" and -2 or 2, 0)
-		self.LFDRole:SetSize(16, 16)
-		-- TODO: use the borderless icons
-	end
-
+	
 	---------------
 	-- PvP icons --
 	---------------
-	if unit == "target" then -- unit == "player" or unit == "target" or unit == "party" then
+	if unit == "target" then 
 		self.PvP = self.overlay:CreateFontString(nil, "OVERLAY")
 		self.PvP:SetPoint("CENTER", self, "TOPLEFT", -1, 4) -- "BOTTOM")
 		self.PvP:SetFont("Fonts\\ARIALN.ttf", 18, "OUTLINE")
@@ -744,7 +701,7 @@ local function Spawn(self, unit, isSingle)
 	-- Threat --
 	------------
 	self.Threat = {
-		Hide = noop, -- oUF stahp
+		Hide = noop,
 		IsObjectType = noop,
 		Override = ns.Threat_Override,
 	}
@@ -760,15 +717,6 @@ local function Spawn(self, unit, isSingle)
 	end
 	if ranger then
 		self[ranger] = { insideAlpha = 1, outsideAlpha = 0.5 }
-	end
-
-	----------------------
-	-- Element: AFK text --
-	----------------------
-	if unit == "player" or unit == "party" then
-		self.AFK = ns.CreateFontString(self.overlay, 14, "CENTER")
-		self.AFK:SetPoint("CENTER", self, "BOTTOM", 0, -3)
-		self.AFK.fontFormat = "AFK %s:%s"
 	end
 
 	--------------------------
@@ -794,7 +742,7 @@ local function Spawn(self, unit, isSingle)
 	---------------------------
 	-- Element: ResInfo text --
 	---------------------------
-	if unit ~= "arena" and unit ~= "boss" and not strmatch(unit, ".target$") then
+	if not strmatch(unit, ".target$") then
 		self.ResInfo = ns.CreateFontString(self.overlay, 16, "CENTER")
 		self.ResInfo:SetPoint("CENTER", 0, 1)
 	end
@@ -822,29 +770,17 @@ local function Spawn(self, unit, isSingle)
 
 end
 
-------------------------------------------------------------------------
--- Override default oUF Blizzard frame hiding for certain frames
 
-local DisableBlizzard = oUF.DisableBlizzard
+-- DO NOT hide Blizzard frames
 
-function oUF:DisableBlizzard(unit)
-	local showUnits = { 
-		player = true, pet = true, 
-		focus = true, focustarget = true,
-		target = true, targettarget = true
-	}
-	if not showUnits[unit] then	
-		DisableBlizzard(self, unit)
-	end
-end
+function oUF:DisableBlizzard(unit) end
 
-------------------------------------------------------------------------
+-- Magic Time!
 
 function ns.Factory(oUF)
 	config = ns.config
 	uconfig = ns.uconfig
 
-	-- SPAWN MORE OVERLORDS!
 	oUF:RegisterStyle("Drak", Spawn)
 	oUF:SetActiveStyle("Drak")
 
@@ -853,21 +789,21 @@ function ns.Factory(oUF)
 		self:SetAttribute("initial-height", %d)
 		self:SetWidth(%d)
 		self:SetHeight(%d)
-	]] -- self:SetAttribute("*type2", "menu")
+	]]
 
 	for unit, udata in pairs(uconfig) do
 		if not udata.disable then
 			local name = "oUFDrak" .. unit:gsub("%a", strupper, 1):gsub("target", "Target"):gsub("pet", "Pet")
 			if udata.point then
 				if udata.attributes then
-					-- print("generating header for", unit)
+					-- debug("generating header for", unit)
 					local w = config.width  * (udata.width  or 1)
 					local h = config.height * (udata.height or 1)
 					ns.headers[unit] = oUF:SpawnHeader(name, nil, udata.visible,
 						"oUF-initialConfigFunction", format(initialConfigFunction, w, h, w, h),
 						unpack(udata.attributes))
 				else
-					-- print("generating frame for", unit)
+					-- debug("generating frame for", unit)
 					ns.frames[unit] = oUF:Spawn(unit, name)
 				end
 			end
@@ -890,7 +826,7 @@ function ns.Factory(oUF)
 	local FONT_FILE = LibStub("LibSharedMedia-3.0"):Fetch("font", config.font) or STANDARD_TEXT_FONT
 	local BAR_TEXTURE = LibStub("LibSharedMedia-3.0"):Fetch("statusbar", config.statusbar) or "Interface\\TargetingFrame\\UI-StatusBar"
 
-	-- Fix default mirror timers to mach
+	-- Fix default mirror timers to match
 	for i = 1, 3 do
 		local barname = "MirrorTimer" .. i
 		local bar = _G[barname]
@@ -910,7 +846,6 @@ function ns.Factory(oUF)
 
 		bar.bar:SetAllPoints(bar)
 		bar.bar:SetStatusBarTexture(BAR_TEXTURE)
-		--bar.bar:SetAlpha(0.8) -- I don't remember why I did this?
 
 		bar.bg:ClearAllPoints()
 		bar.bg:SetAllPoints(bar)
@@ -926,20 +861,5 @@ function ns.Factory(oUF)
 		ns.CreateBorder(bar, nil, nil, bar.bar, "OVERLAY")
 	end
 
---[[ Seems no longer necessary?
-	local fixertimer = 2
-	local fixer = CreateFrame("Frame") -- I don't understand why this is necessary... but it is.
-	fixer:SetScript("OnUpdate", function(self, elapsed)
-		fixertimer = fixertimer - elapsed
-		if fixertimer <= 0 then
-			self:Hide()
-			self:SetScript("OnUpdate", nil)
-			fixertimer, fixer = nil, nil
-			for i = 1, #oUF.objects do
-				oUF.objects[i]:UpdateAllElements("ForceUpdate")
-			end
-		end
-	end)
-]]
 end
 

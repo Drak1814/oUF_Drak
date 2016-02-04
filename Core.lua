@@ -12,215 +12,6 @@ ns.fontstrings = {}
 ns.statusbars = {}
 
 ------------------------------------------------------------------------
---	Default configuration
-------------------------------------------------------------------------
-
-ns.configDefault = {
-	width = 200,
-	height = 30,
-	powerHeight = 0.3,				-- how much of the frame's height should be occupied by the power bar
-
-	backdrop = { bgFile = [[Interface\BUTTONS\WHITE8X8]] },
-	backdropColor = { 32/256, 32/256, 32/256, 1 },
-
-	statusbar = "Neal",				-- bar texture
-
-	font = "Arial Narrow",
-	fontOutline = "OUTLINE",
-	fontShadow = true,
-	fontScale = 1, -- no UI
-
-	dispelFilter = true,			-- only highlight the frame for debuffs you can dispel
-	ignoreOwnHeals = false,			-- only show incoming heals from other players
-	threatLevels = false,			-- show threat levels instead of binary aggro
-
-	combatText = false,				-- show combat feedback text
-	druidMana = false,				-- [druid] show a mana bar in cat/bear forms
-	eclipseBar = true,				-- [druid] show an eclipse bar
-	eclipseBarIcons = false,		-- [druid] show animated icons on the eclipse bar
-	runeBars = true,				-- [deathknight] show rune cooldown bars
-	staggerBar = true,				-- [monk] show stagger bar
-	totemBars = true,				-- [shaman] show totem duration bars
-
-	healthColorMode = "HEALTH",
-	healthColor = { 0.1, 0.9, 0.1 },
-	healthBG = 0.2,					
-
-	powerColorMode = "CLASS",		
-	powerColor = { 0.9, 0.1, 0.9 }, 
-	powerBG = 0.2,					
-	
-	castColor = { 0.9, 0.9, 0.1 },	
-	castBG = 0.2,					
-
-	borderColor = { 0.5, 0.5, 0.5 },
-	borderSize = 12,
-
-	PVP = false, -- enable PVP mode, currently only affects aura filtering
-}
-
-------------------------------------------------------------------------
---	Default unit configuration
-------------------------------------------------------------------------
-
-ns.uconfigDefault = {
-	player = {
-		point = "BOTTOMRIGHT UIParent CENTER -200 -200",
-		width = 1.3,
-		power = true,
-		castbar = true,
-	},
-	pet = {
-		point = "RIGHT player LEFT -12 0",
-		width = 0.5,
-		power = true,
-		castbar = true,
-	},
-	target = {
-		point = "BOTTOMLEFT UIParent CENTER 200 -200",
-		width = 1.3,
-		power = true,
-		castbar = true,
-	},
-	targettarget = {
-		point = "LEFT target RIGHT 12 0",
-		width = 0.5,
-	},
-	focus = {
-		point = "TOPLEFT target BOTTOMLEFT 0 -60",
-		power = true,
-	},
-	focustarget = {
-		point = "LEFT focus RIGHT 12 0",
-		width = 0.5,
-	},
-	party = {
-		disable = true,
-		point = "TOPLEFT boss5 BOTTOMLEFT 0 -75", -- CHECK POSITION
-		width = 0.5,
-		power = true,
-		attributes = { "showPlayer", true, "showParty", true, "showRaid", false, "xOffset", 0, "yOffset", -25 },
-		visible = "custom [nogroup][group:party,@party1,noexists][group:raid,@raid6,exists]hide;show",
-	},
-	partypet = {
-		disable = true,
-		point = "TOPLEFT party TOPRIGHT 12 0",
-		width = 0.25,
-		attributes = { "showPlayer", true, "showParty", true, "showRaid", false, "xOffset", 0, "yOffset", -25, "useOwnerUnit", true, "unitsuffix", "pet" },
-		visible = "custom [nogroup][group:party,@party1,noexists][group:raid,@raid6,exists]hide;show",
-	},
-	-------------
-	--	Bosses --
-	-------------
-	boss1 = {
-		disable = true,
-		point = "TOPRIGHT UIParent TOPRIGHT -15 -250",
-		width = 0.8,
-		height = 0.8,
-		power = true,
-	},
-	boss2 = {
-		disable = true,
-		point = "TOPRIGHT boss1 BOTTOMRIGHT 0 -25",
-		width = 0.8,
-		height = 0.8,
-		power = true,
-	},
-	boss3 = {
-		disable = true,
-		point = "TOPRIGHT boss2 BOTTOMRIGHT 0 -25",
-		width = 0.8,
-		height = 0.8,
-		power = true,
-	},
-	boss4 = {
-		disable = true,
-		point = "TOPRIGHT boss3 BOTTOMRIGHT 0 -25",
-		width = 0.8,
-		height = 0.8,
-		power = true,
-	},
-	boss5 = {
-		disable = true,
-		point = "TOPRIGHT boss4 BOTTOMRIGHT 0 -25",
-		width = 0.8,
-		height = 0.8,
-		power = true,
-	},
-	-----------------------
-	--	Arena Oppnonents --
-	-----------------------
-	arena1 = {
-		disable = true,
-		point = "TOPLEFT boss1",
-		width = 0.5,
-		height = 0.8,
-		power = true,
-	},
-	arena2 = {
-		disable = true,
-		point = "TOPRIGHT arena1 BOTTOMRIGHT 0 -25",
-		width = 0.5,
-		height = 0.8,
-		power = true,
-	},
-	arena3 = {
-		disable = true,
-		point = "TOPRIGHT arena2 BOTTOMRIGHT 0 -25",
-		width = 0.5,
-		height = 0.8,
-		power = true,
-	},
-	arena4 = {
-		disable = true,
-		point = "TOPRIGHT arena3 BOTTOMRIGHT 0 -25",
-		width = 0.5,
-		height = 0.8,
-		power = true,
-	},
-	arena5 = {
-		disable = true,
-		point = "TOPRIGHT arena4 BOTTOMRIGHT 0 -25",
-		width = 0.5,
-		height = 0.8,
-		power = true,
-	},
-	----------------------------
-	--	Arena Opponents' Pets --
-	----------------------------
-	arenapet1 = {
-		disable = true,
-		point = "LEFT arena1 RIGHT 10 0",
-		width = 0.25,
-		height = 0.8,
-	},
-	arenapet2 = {
-		disable = true,
-		point = "LEFT arena2 RIGHT 10 0",
-		width = 0.25,
-		height = 0.8,
-	},
-	arenapet3 = {
-		disable = true,
-		point = "LEFT arena3 RIGHT 10 0",
-		width = 0.25,
-		height = 0.8,
-	},
-	arenapet4 = {
-		disable = true,
-		point = "LEFT arena4 RIGHT 10 0",
-		width = 0.25,
-		height = 0.8,
-	},
-	arenapet5 = {
-		disable = true,
-		point = "LEFT arena5 RIGHT 10 0",
-		width = 0.25,
-		height = 0.8,
-	},
-}
-
-------------------------------------------------------------------------
 --	Colors
 ------------------------------------------------------------------------
 
@@ -252,6 +43,7 @@ end
 ------------------------------------------------------------------------
 --	Load stuff
 ------------------------------------------------------------------------
+
 local function debug(...)
 	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
 end
@@ -268,6 +60,7 @@ Options.name = "oUF Drak"
 InterfaceOptions_AddCategory(Options)
 
 function Loader:ADDON_LOADED(event, addon)
+
 	if addon ~= "oUF_Drak" then return end
 
 	local function initDB(db, defaults)
@@ -293,31 +86,11 @@ function Loader:ADDON_LOADED(event, addon)
 
 	-- Aura settings stored per character:
 	local AURA_CONFIG_VERSION = 3
-	if oUFDrakAuraConfig and oUFDrakAuraConfig.VERSION and oUFDrakAuraConfig.VERSION < AURA_CONFIG_VERSION then
-		-- Just wipe old bitflags, upgrading v1, v2 is too much work.
-		-- Will try to be more vigilant about incremental upgrades in the future.
-		oUFDrakAuraConfig = nil
-	end
 	oUFDrakAuraConfig = initDB(oUFDrakAuraConfig, {
 		customFilters = {},
 		deleted = {},
 	})
-	if oUFDrakAuraConfig.VERSION == nil then
-		-- Upgrade from pre-bitflag filter values
-		local bitflags = {
-			[0] = ns.auraFilterValues.FILTER_DISABLE,
-			[1] = ns.auraFilterValues.FILTER_ALL,
-			[2] = ns.auraFilterValues.FILTER_BY_PLAYER,
-			[3] = ns.auraFilterValues.FILTER_ON_FRIEND,
-			[4] = ns.auraFilterValues.FILTER_ON_PLAYER,
-		}
-		for id, flag in pairs(oUFDrakAuraConfig) do
-			if id ~= "customFilters" and id ~= "deleted" then
-				oUFDrakAuraConfig.customFilters[id] = bitflags[flag]
-				oUFDrakAuraConfig[id] = nil
-			end
-		end
-	end
+	
 	-- Remove default values
 	for id, flag in pairs(oUFDrakAuraConfig.customFilters) do
 		if flag == ns.defaultAuras[id] then
@@ -354,6 +127,21 @@ function Loader:ADDON_LOADED(event, addon)
 		end)
 	end
 
+	-- Focus Key
+	if (ns.config.fastfocus ~= 'NONE') then
+		--Blizzard raid frame
+		hooksecurefunc("CompactUnitFrame_SetUpFrame", function(frame, ...)
+			if frame then
+				frame:SetAttribute(ns.config.fastfocus.."-type1", "focus")
+			end
+		end)
+		-- World Models
+		local foc = CreateFrame("CheckButton", "FastFocuser", UIParent, "SecureActionButtonTemplate")
+		foc:SetAttribute("type1", "macro")
+		foc:SetAttribute("macrotext", "/focus mouseover")
+		SetOverrideBindingClick(Focuser, true, ns.config.focMod.."-BUTTON1", "FastFocuser")
+	end
+	
 	-- Cleanup
 	self:UnregisterEvent(event)
 	self.ADDON_LOADED = nil
@@ -361,20 +149,14 @@ function Loader:ADDON_LOADED(event, addon)
 
 	-- Go
 	oUF:Factory(ns.Factory)
-
 	
 	-- Sounds for target/focus changing and PVP flagging
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
-	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterUnitEvent("UNIT_FACTION", "player")
 
-	-- Shift to temporarily show all buffs
-	self:RegisterEvent("PLAYER_REGEN_DISABLED")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED")
-	if not UnitAffectingCombat("player") then
-		self:RegisterEvent("MODIFIER_STATE_CHANGED")
-	end
+	-- CTRL+ALT to temporarily show all buffs
+	self:RegisterEvent("MODIFIER_STATE_CHANGED")
 
 	-- Load options on demand
 --@non-debug@
@@ -392,7 +174,6 @@ function Loader:ADDON_LOADED(event, addon)
 --@end-non-debug@
 
 	SLASH_OUFDrak1 = "/douf"
-	SLASH_OUFDrak2 = "/oufDrak"
 	function SlashCmdList.OUFDrak(cmd)
 		cmd = strlower(cmd)
 		if cmd == "buffs" or cmd == "debuffs" then
@@ -446,29 +227,6 @@ end
 
 ------------------------------------------------------------------------
 
-function Loader:PLAYER_ENTERING_WORLD(event)
-	
-	-- Conditionally show certain frames
-	local frameCond = {
-		{ ref = oUFDrakPlayer, cond = "[combat] show; hide" },
-		{ ref = oUFDrakPet, cond = "[combat,pet] show; hide" },
-		{ ref = oUFDrakFocus, cond = "[combat,@focus,exists] show; hide" },
-		{ ref = oUFDrakFocusTarget, cond = "[combat,@focustarget,exists] show; hide" },
-		{ ref = oUFDrakTarget, cond = "[combat,exists] show; hide" },
-		{ ref = oUFDrakTargetTarget, cond = "[combat,@targettarget,exists] show; hide" }
-	}
-	
-	local function HideFrame(self) 
-		if not InCombatLockdown() then self:Hide() end
-	end
-
-	for _, frame in ipairs(frameCond) do
-		frame.ref:HookScript('OnShow', HideFrame)
-		RegisterStateDriver(frame.ref, 'visibility', frame.cond)
-	end
-
-end
-
 function Loader:PLAYER_FOCUS_CHANGED(event)
 	if UnitExists("focus") then
 		if UnitIsEnemy("focus", "player") then
@@ -482,6 +240,8 @@ function Loader:PLAYER_FOCUS_CHANGED(event)
 		PlaySound("INTERFACESOUND_LOSTTARGETUNIT")
 	end
 end
+
+-- Sound on target change
 
 function Loader:PLAYER_TARGET_CHANGED(event)
 	if UnitExists("target") then
@@ -497,6 +257,8 @@ function Loader:PLAYER_TARGET_CHANGED(event)
 	end
 end
 
+-- Sound on PVP
+
 local announcedPVP
 function Loader:UNIT_FACTION(event, unit)
 	if UnitIsPVPFreeForAll("player") or UnitIsPVP("player") then
@@ -509,46 +271,36 @@ function Loader:UNIT_FACTION(event, unit)
 	end
 end
 
-------------------------------------------------------------------------
-
-function Loader:PLAYER_REGEN_DISABLED(event)
-	self:UnregisterEvent("MODIFIER_STATE_CHANGED")
-	self:MODIFIER_STATE_CHANGED(event, "LSHIFT", 0)
-end
-
-function Loader:PLAYER_REGEN_ENABLED(event)
-	self:RegisterEvent("MODIFIER_STATE_CHANGED")
-	self:MODIFIER_STATE_CHANGED(event, "LSHIFT", IsShiftKeyDown() and 1 or 0)
-end
+-- Show all auras
 
 function Loader:MODIFIER_STATE_CHANGED(event, key, state)
-	if key ~= "LSHIFT" and key ~= "RSHIFT" then
-		return
-	end
-	local a, b
-	if state == 1 then
-		a, b = "CustomFilter", "__CustomFilter"
-	else
-		a, b = "__CustomFilter", "CustomFilter"
-	end
-	for i = 1, #oUF.objects do
-		local object = oUF.objects[i]
-		local buffs = object.Auras or object.Buffs
-		if buffs and buffs[a] then
-			buffs[b] = buffs[a]
-			buffs[a] = nil
-			buffs:ForceUpdate()
+	if 	
+		( IsControlKeyDown() and (key == 'LALT' or key == 'RALT')) or
+		( IsAltKeyDown() and (key == 'LCTRL' or key == 'RCTRL')) 
+	then
+		local a, b
+		if state == 1 then
+			a, b = "CustomFilter", "__CustomFilter"
+		else
+			a, b = "__CustomFilter", "CustomFilter"
 		end
-		local debuffs = object.Debuffs
-		if debuffs and debuffs[a] then
-			debuffs[b] = debuffs[a]
-			debuffs[a] = nil
-			debuffs:ForceUpdate()
+		for i = 1, #oUF.objects do
+			local object = oUF.objects[i]
+			local buffs = object.Auras or object.Buffs
+			if buffs and buffs[a] then
+				buffs[b] = buffs[a]
+				buffs[a] = nil
+				buffs:ForceUpdate()
+			end
+			local debuffs = object.Debuffs
+			if debuffs and debuffs[a] then
+				debuffs[b] = debuffs[a]
+				debuffs[a] = nil
+				debuffs:ForceUpdate()
+			end
 		end
 	end
 end
-
-------------------------------------------------------------------------
 
 function ns.si(value, raw)
 	if not value then return "" end
@@ -577,8 +329,6 @@ function ns.si(value, raw)
 		return format(str, val)
 	end
 end
-
-------------------------------------------------------------------------
 
 local FALLBACK_FONT_SIZE = 16 -- some Blizzard bug
 
@@ -618,8 +368,6 @@ function ns.SetAllFonts()
 		bar.text:SetFont(file, size, outline)
 	end
 end
-
-------------------------------------------------------------------------
 
 do
 	local function SetReverseFill(self, reverse)

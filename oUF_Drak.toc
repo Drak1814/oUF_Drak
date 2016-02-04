@@ -43,8 +43,8 @@ Features\Runes.lua
 Features\Tags.lua
 Features\Totems.lua
 
+Defaults.lua
 Core.lua
-
 Auras.lua
 Functions.lua
 Frames.lua
