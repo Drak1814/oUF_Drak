@@ -758,13 +758,17 @@ end
 
 -- DO NOT hide Blizzard frames
 
-function oUF:DisableBlizzard(unit) end
+--function oUF:DisableBlizzard(unit) end
 
 -- Magic Time!
 
 function ns.Factory(oUF)
 	config = ns.config
 	uconfig = ns.uconfig
+	
+	-- DO NOT hide Blizzard frames
+	local DisableBlizzard = oUF.DisableBlizzard
+	function oUF:DisableBlizzard(unit) end
 
 	oUF:RegisterStyle("Drak", Spawn)
 	oUF:SetActiveStyle("Drak")
@@ -797,6 +801,8 @@ function ns.Factory(oUF)
 		end
 	end
 
+	oUF.DisableBlizzard = DisableBlizzard
+	
 	for unit, object in pairs(ns.frames) do
 		local udata = uconfig[unit]
 		local p1, parent, p2, x, y = string.split(" ", udata.point)
