@@ -695,7 +695,7 @@ local function Spawn(self, unit, isSingle)
 	local ranger
 	if IsAddOnLoaded("oUF_SpellRange") then
 		ranger = "SpellRange"
-	elseif unit == "pet"
+	elseif unit == "pet" then
 		ranger = "Range"
 	end
 	if ranger then
@@ -707,7 +707,7 @@ local function Spawn(self, unit, isSingle)
 	--------------------------
 	if uconfig.combatText and not strmatch(unit, ".target$") then
 		self.CombatText = ns.CreateFontString(self.overlay, 22, "CENTER")
-		if unit == "pet"
+		if unit == "pet" then
 			self.CombatText:SetPoint("LEFT", 2, -1)
 		else
 			self.CombatText:SetPoint("CENTER", 0, -1)
