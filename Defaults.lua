@@ -62,37 +62,31 @@ ns.uconfigDefault = {
 		point = "BOTTOMRIGHT UIParent CENTER -200 -200",
 		width = 1.3,
 		power = true,
-		castbar = true,
-		visible = "custom [combat,novehicleui,nooverridebar,nopetbattle] show; hide"
+		castbar = true
 	},
 	pet = {
 		point = "RIGHT player LEFT -12 0",
 		width = 0.5,
 		power = true,
-		castbar = true,
-		visible = defVisibleCond:format(",pet")
-	}
+		castbar = true
+	},
 	focus = {
 		point = "TOPLEFT target BOTTOMLEFT 0 -60",
-		power = true,
-		visible = "custom [combat,novehicleui,nooverridebar,nopetbattle,@focus,exists] show; hide"
+		power = true
 	},
 	focustarget = {
 		point = "LEFT focus RIGHT 12 0",
-		width = 0.5,
-		visible = "[combat,novehicleui,nooverridebar,nopetbattle,@focustarget,exists] show; hide"
+		width = 0.5
 	},
 	target = {
 		point = "BOTTOMLEFT UIParent CENTER 200 -200",
 		width = 1.3,
 		power = true,
-		castbar = true,
-		visible = "custom [combat,novehicleui,nooverridebar,nopetbattle,@focus,exists] show; hide"
+		castbar = true
 	},
 	targettarget = {
 		point = "LEFT target RIGHT 12 0",
-		width = 0.5,
-		visible = "custom [combat,novehicleui,nooverridebar,nopetbattle,@focustarget,exists] show; hide"
+		width = 0.5
 	}
 }
 
