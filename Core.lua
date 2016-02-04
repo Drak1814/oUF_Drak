@@ -201,6 +201,8 @@ function Loader:ADDON_LOADED(event, addon)
 		end
 	end
 	
+	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak Loaded")
+	
 end
 
 ------------------------------------------------------------------------
