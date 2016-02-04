@@ -512,7 +512,7 @@ local function Spawn(self, unit, isSingle)
 	----------------
 	-- Phase icon --
 	----------------
-	if unit == "party" or unit == "target" or unit == "focus" then
+	if unit == "target" or unit == "focus" then
 		local phase = self.Health:CreateTexture(nil, "OVERLAY")
 		phase:SetPoint("TOP", self)
 		phase:SetPoint("BOTTOM", self)
@@ -600,28 +600,6 @@ local function Spawn(self, unit, isSingle)
 		self.Buffs.CustomFilter   = ns.CustomAuraFilters.pet
 		self.Buffs.PostCreateIcon = ns.Auras_PostCreateIcon
 		self.Buffs.PostUpdateIcon = ns.Auras_PostUpdateIcon
-
-		self.Buffs.parent = self
-	elseif unit == "party" then
-		local GAP = 6
-
-		self.Buffs = CreateFrame("Frame", nil, self)
-		self.Buffs:SetPoint("RIGHT", self, "LEFT", -10, 0)
-		self.Buffs:SetHeight(FRAME_HEIGHT)
-		self.Buffs:SetWidth((FRAME_HEIGHT * 4) + (GAP * 3))
-
-		self.Buffs["growth-x"] = "LEFT"
-		self.Buffs["growth-y"] = "DOWN"
-		self.Buffs["initialAnchor"] = "RIGHT"
-		self.Buffs["num"] = 4
-		self.Buffs["size"] = FRAME_HEIGHT
-		self.Buffs["spacing-x"] = GAP
-		self.Buffs["spacing-y"] = GAP
-
-		self.Buffs.CustomFilter   = ns.CustomAuraFilters.party
-		self.Buffs.PostCreateIcon = ns.Auras_PostCreateIcon
-		self.Buffs.PostUpdateIcon = ns.Auras_PostUpdateIcon
-		self.Buffs.PostUpdate     = ns.Auras_PostUpdate -- required to detect Dead => Ghost
 
 		self.Buffs.parent = self
 	elseif unit == "target" then
@@ -717,7 +695,7 @@ local function Spawn(self, unit, isSingle)
 	local ranger
 	if IsAddOnLoaded("oUF_SpellRange") then
 		ranger = "SpellRange"
-	elseif unit == "pet" or unit == "party" or unit == "partypet" then
+	elseif unit == "pet"
 		ranger = "Range"
 	end
 	if ranger then
@@ -729,7 +707,7 @@ local function Spawn(self, unit, isSingle)
 	--------------------------
 	if uconfig.combatText and not strmatch(unit, ".target$") then
 		self.CombatText = ns.CreateFontString(self.overlay, 22, "CENTER")
-		if unit == "pet" or unit == "party" then
+		if unit == "pet"
 			self.CombatText:SetPoint("LEFT", 2, -1)
 		else
 			self.CombatText:SetPoint("CENTER", 0, -1)
