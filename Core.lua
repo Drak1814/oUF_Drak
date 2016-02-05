@@ -8,7 +8,7 @@
 local _, ns = ...
 local Media
 
-local VERSION = "1.3"
+local VERSION = "1.3.1"
 
 local function debug(...)
 	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
