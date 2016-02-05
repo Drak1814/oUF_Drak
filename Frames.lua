@@ -258,12 +258,14 @@ local function Spawn(self, unit, isSingle)
 		self.Name:SetPoint("BOTTOMLEFT", self.Health, "TOPLEFT", 2, -2)
 		self.Name:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", -2, -2) -- -5
 		self:Tag(self.Name, "[unitcolor][name]")
-	elseif unit == "player" then
+--[[
+		elseif unit == "player" then
 		self.Name = ns.CreateFontString(self.overlay, 16, "LEFT")
 		self.Name:SetPoint("LEFT", self.Resting, "RIGHT", 1, 0)
 		self.Name:SetPoint("BOTTOMRIGHT", self.Health, "TOPRIGHT", -30, -2)
 		self:Tag(self.Name, "[unitcolor][name]")
-	end
+]]
+		end
 
 	-----------------
 	-- Threat text --

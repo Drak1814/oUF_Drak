@@ -5,6 +5,7 @@
 	<Script file='BurningEmbers.lua' />
 	<Script file='Castbar.lua' />
 	<Script file='EclipseBar.lua' />
+	<Script file='Runes.lua' />
 	<Script file='Tags.lua' />
 	<Script file='Totems.lua' />
 </Ui>
