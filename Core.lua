@@ -5,16 +5,21 @@
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------]]
 
-local _, ns = ...
+local _name, ns = ...
 local Media
 
-local VERSION = "1.3.1"
+local toc = {
+	title = GetAddOnMetadata(_name, 'Title'),
+	version = GetAddOnMetadata(_name, 'Version')
+}
 
 local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
+	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4f" .. _name .. ":|r", tostringall(...)))
 end
 
 --debug("Loading Core.lua")
+
+assert(oUF, _name .. " was unable to locate oUF install.")
 
 ns.fontstrings = {}
 ns.statusbars = {}
@@ -65,7 +70,7 @@ InterfaceOptions_AddCategory(Options)
 
 function Loader:ADDON_LOADED(event, addon)
 
-	if addon ~= "oUF_Drak" then return end
+	if addon ~= _name then return end
 
 	local function initDB(db, defaults)
 		if type(db) ~= "table" then db = {} end
@@ -113,7 +118,7 @@ function Loader:ADDON_LOADED(event, addon)
 		Media:Register("statusbar", "Neal", [[Interface\AddOns\oUF_Drak\Media\Neal]])
 		--Media:Register("border", "SimpleSquare", [[Interface\AddOns\oUF_Drak\Media\SimpleSquare.tga]])
 
-		Media.RegisterCallback("oUF_Drak", "LibSharedMedia_Registered", function(callback, mediaType, key)
+		Media.RegisterCallback(_name, "LibSharedMedia_Registered", function(callback, mediaType, key)
 			--debug(callback, mediaType, key)
 			if mediaType == "font" and key == ns.config.font then
 				ns.SetAllFonts()
@@ -121,7 +126,7 @@ function Loader:ADDON_LOADED(event, addon)
 				ns.SetAllStatusBarTextures()
 			end
 		end)
-		Media.RegisterCallback("oUF_Drak", "LibSharedMedia_SetGlobal", function(callback, mediaType)
+		Media.RegisterCallback(_name, "LibSharedMedia_SetGlobal", function(callback, mediaType)
 			--debug(callback, mediaType)
 			if mediaType == "font" then
 				ns.SetAllFonts()
@@ -170,12 +175,12 @@ function Loader:ADDON_LOADED(event, addon)
 --@non-debug@
 	Options:SetScript("OnShow", function(self)
 		oUFDrak = ns
-		local loaded, reason = LoadAddOn("oUF_Drak_Config")
+		local loaded, reason = LoadAddOn(_name .. "_Config")
 		if not loaded then
 			local text = self:CreateFontString(nil, nil, "GameFontHighlight")
 			text:SetPoint("BOTTOMLEFT", 16, 16)
 			text:SetPoint("TOPRIGHT", -16, -16)
-			text:SetFormattedText(ADDON_LOAD_FAILED, "oUF_Drak_Config", _G[reason])
+			text:SetFormattedText(ADDON_LOAD_FAILED, _name .. "_Config", _G[reason])
 			oUFDrak = nil
 		end
 	end)
@@ -194,12 +199,12 @@ function Loader:ADDON_LOADED(event, addon)
 			end
 			if #tmp > 0 then
 				sort(tmp)
-				DEFAULT_CHAT_FRAME:AddMessage(format("|cff00ddbaoUF Drak:|r Your current target has %d %s:", #tmp, cmd))
+				DEFAULT_CHAT_FRAME:AddMessage(format("|cff00ddba" .. _name .. ":|r Your current target has %d %s:", #tmp, cmd))
 				for i = 1, #tmp do
 					DEFAULT_CHAT_FRAME:AddMessage("   ", tmp[i])
 				end
 			else
-				DEFAULT_CHAT_FRAME:AddMessage(format("|cff00ddbaoUF Drak:|r Your current target does not have any %s.", cmd))
+				DEFAULT_CHAT_FRAME:AddMessage(format("|cff00ddba" .. _name .. ":|r Your current target does not have any %s.", cmd))
 			end
 		else
 			InterfaceOptionsFrame_OpenToCategory("oUF Drak")
@@ -207,9 +212,9 @@ function Loader:ADDON_LOADED(event, addon)
 		end
 	end
 	
-	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak " .. VERSION .. " Loaded")
-	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak: FastFocus " .. (ns.config.fastfocus and "Enabled" or "Disabled"))
-	DEFAULT_CHAT_FRAME:AddMessage("oUF_Drak: ExpandedZoom " ..(ns.config.expandzoom and "Enabled" or "Disabled"))
+	DEFAULT_CHAT_FRAME:AddMessage(_name .. " " .. toc.version .. " Loaded")
+	DEFAULT_CHAT_FRAME:AddMessage(_name .. ": FastFocus " .. (ns.config.fastfocus and "Enabled" or "Disabled"))
+	DEFAULT_CHAT_FRAME:AddMessage(_name .. ": ExpandedZoom " ..(ns.config.expandzoom and "Enabled" or "Disabled"))
 			
 end
 
