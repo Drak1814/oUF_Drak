@@ -6,6 +6,6 @@ Features include aura filtering, threat highlighting, display of all secondary r
 
 **Required:** [oUF Core](http://www.wowinterface.com/downloads/info9994-oUF.html "http://www.wowinterface.com/downloads/info9994-oUF.html")
 
-**Recomended:** [oUF MoveableFrames](http://www.wowinterface.com/downloads/info15425-oUFMovableFrames.html "http://www.wowinterface.com/downloads/info15425-oUFMovableFrames.html"), [oUF Smooth Update](http://www.wowinterface.com/downloads/info11503-oUFSmoothUpdate.html "http://www.wowinterface.com/downloads/info11503-oUFSmoothUpdate.html"), [oUF SpellRange](http://www.wowinterface.com/downloads/info12839-oUFSpellRange.html "http://www.wowinterface.com/downloads/info12839-oUFSpellRange.html")
+**Recomended:** [oUF Smooth Update](http://www.wowinterface.com/downloads/info11503-oUFSmoothUpdate.html "http://www.wowinterface.com/downloads/info11503-oUFSmoothUpdate.html"), [oUF SpellRange](http://www.wowinterface.com/downloads/info12839-oUFSpellRange.html "http://www.wowinterface.com/downloads/info12839-oUFSpellRange.html")
 
 *Based on the most excellent work of Phanx*
