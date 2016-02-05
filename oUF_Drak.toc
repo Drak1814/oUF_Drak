@@ -1,5 +1,5 @@
-## Interface: 60000
-## Version: 1.0
+## Interface: 60200
+## Version: 1.3.1
 ## X-Curse-Packaged-Version: 1.0
 ## X-Curse-Project-Name: oUF_Drak
 ## X-Curse-Project-ID: ouf-drak
@@ -13,12 +13,18 @@
 ## X-Copyright: Copyright (c) 2016 Drak. All rights reserved.
 ## X-Website: http://www.wowinterface.com/downloads/info13993-oUFPhanx.html
 
+## X-MoveStyle: Drak
+## X-MoveDB: oUFDrakMove
+## X-MoveCmd: /doufmove
+## X-MoveTitle: oUF Drak Position
+
 ## Dependencies: oUF
 ## OptionalDependencies: LibResInfo-1.0, LibSharedMedia-3.0, DrakConfigWidgets
-## SavedVariables: oUFDrakConfig, oUFDrakUnitConfig
+## SavedVariables: oUFDrakConfig, oUFDrakUnitConfig, oUFDrakMove
 ## SavedVariablesPerCharacter: oUFDrakAuraConfig
 
 Libs\libs.xml
+Embeds\oUF_MovableFrames\movable.lua
 Features\module.xml
 Elements\module.xml
 oUF_Drak.xml
