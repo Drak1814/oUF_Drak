@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file='AFK.lua' />
+	<Script file='AuraStack.lua' />
+	<Script file='BurningEmbers.lua' />
+	<Script file='CombatText.lua' />
+	<Script file='DemonicFury.lua' />
+	<Script file='DispelHighlight.lua' />
+	<Script file='ResInfo.lua' />
+	<Script file='WildMushrooms.lua' />
+</Ui>

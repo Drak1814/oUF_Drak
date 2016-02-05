@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file='MultiBar.lua' />
+	<Script file='Orbs.lua' />
+	<Script file='Border.lua' />
+	<Script file='BurningEmbers.lua' />
+	<Script file='Castbar.lua' />
+	<Script file='EclipseBar.lua' />
+	<Script file='Tags.lua' />
+	<Script file='Totems.lua' />
+</Ui>
