@@ -1,6 +1,6 @@
 ## Interface: 60200
-## Version: 1.3.1
-## X-Curse-Packaged-Version: 1.0
+## Version: 1.4
+## X-Curse-Packaged-Version: 1.4
 ## X-Curse-Project-Name: oUF_Drak
 ## X-Curse-Project-ID: ouf-drak
 ## X-Curse-Repository-ID: wow/ouf-drak/mainline
