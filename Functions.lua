@@ -13,6 +13,12 @@ local playerUnits = { player = true, pet = true, vehicle = true }
 local si = ns.si
 ns.noop = noop
 
+local function debug(...)
+	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
+end
+
+--debug("Loading Functions.lua")
+
 ------------------------------------------------------------------------
 
 ns.framePrototype = {

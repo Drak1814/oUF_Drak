@@ -8,6 +8,12 @@
 local _, ns = ...
 local Media
 
+local function debug(...)
+	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
+end
+
+--debug("Loading Core.lua")
+
 ns.fontstrings = {}
 ns.statusbars = {}
 
@@ -43,10 +49,6 @@ end
 ------------------------------------------------------------------------
 --	Load stuff
 ------------------------------------------------------------------------
-
-local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
-end
 
 local Loader = CreateFrame("Frame")
 Loader:RegisterEvent("ADDON_LOADED")
