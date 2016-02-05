@@ -793,9 +793,9 @@ function ns.Factory(oUF)
 						unpack(udata.attributes))
 				else
 					--debug("generating frame for", unit)
-					ns.frames[unit] = oUF:Spawn(unit, name)
-					-- only show HUD during normal combat
-					RegisterStateDriver(ns.frames[unit]:GetParent(), 'visibility', "[combat,nopetbattle,novehicleui,nooverridebar] show; hide")
+					local frame = oUF:Spawn(unit, name)
+					frame:SetParent(oUFDrak_CombatShowFrame)
+					ns.frames[unit] = frame
 				end
 			end
 		end
