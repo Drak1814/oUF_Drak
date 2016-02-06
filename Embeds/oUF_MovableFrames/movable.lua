@@ -597,7 +597,7 @@ end
 do
 	local opt = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 	opt:Hide()
-	opt.name = _TITLE
+	opt.name = "oUF Drak - Position"
 	opt.parent = "oUFDrakOptions"
 	opt:SetScript("OnShow", function(self)
 		debug("moveableOptions", "OnShow")
