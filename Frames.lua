@@ -8,19 +8,17 @@
 local _, ns = ...
 local _, playerClass = UnitClass("player")
 local colors = oUF.colors
-local config
 
 local function noop() end
-
-local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
-end
+local debug = ns.debug
 
 ns.frames, ns.headers, ns.objects = {}, {}, {}
 
 local function Spawn(self, unit, isSingle)
-
-	--debug("Spawning", unit)
+	
+	local config = ns.config
+	
+	debug("Spawning Unit", unit)
 	
 	if self:GetParent():GetAttribute("useOwnerUnit") then
 		local suffix = self:GetParent():GetAttribute("unitsuffix")
@@ -32,7 +30,6 @@ local function Spawn(self, unit, isSingle)
 	local uconfig = ns.uconfig[unit]
 	self.spawnunit = unit
 
-	--debug("Spawn", self:GetName(), unit)
 	tinsert(ns.objects, self)
 
 	--self.menu = ns.UnitFrame_DropdownMenu
@@ -760,8 +757,8 @@ end
 -- Magic Time!
 
 function ns.Factory(oUF)
-	config = ns.config
-	uconfig = ns.uconfig
+	local config = ns.config
+	local uconfig = ns.uconfig
 	
 	-- DO NOT hide Blizzard frames
 	local DisableBlizzard = oUF.DisableBlizzard
@@ -782,14 +779,14 @@ function ns.Factory(oUF)
 			local name = "oUFDrak" .. unit:gsub("%a", strupper, 1):gsub("target", "Target"):gsub("pet", "Pet")
 			if udata.point then
 				if udata.attributes then
-					--debug("generating header for", unit, unpack(udata.visible))
+					debug("Generating header for", unit)
 					local w = config.width  * (udata.width  or 1)
 					local h = config.height * (udata.height or 1)
 					ns.headers[unit] = oUF:SpawnHeader(name, nil, udata.visible,
 						"oUF-initialConfigFunction", format(initialConfigFunction, w, h, w, h),
 						unpack(udata.attributes))
 				else
-					--debug("generating frame for", unit)
+					debug("Generating frame for", unit)
 					local frame = oUF:Spawn(unit, name)
 					frame:SetParent(oUFDrak_CombatShowFrame)
 					ns.frames[unit] = frame
