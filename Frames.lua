@@ -16,8 +16,6 @@ local function debug(...)
 	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
 end
 
---debug("Loading Frames.lua")
-
 ns.frames, ns.headers, ns.objects = {}, {}, {}
 
 local function Spawn(self, unit, isSingle)
@@ -758,11 +756,6 @@ local function Spawn(self, unit, isSingle)
 	
 
 end
-
-
--- DO NOT hide Blizzard frames
-
---function oUF:DisableBlizzard(unit) end
 
 -- Magic Time!
 
