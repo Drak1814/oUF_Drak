@@ -85,7 +85,7 @@ local getObjectInformation = function(obj)
 	local style = obj.style or 'Unknown'
 	local identifier = obj:GetName() or obj.unit
 	
-	debug("getObjectInformation", identifier)
+	--debug("getObjectInformation", identifier)
 	
 	-- Are we dealing with header units?
 	local isHeader
@@ -364,6 +364,7 @@ do
 	end
 end
 
+-- TODO: Import into oUF_Drak (Loader?)
 do
 	local frame = CreateFrame("Frame")
 	frame:SetScript("OnEvent", function(self, event)
@@ -590,7 +591,9 @@ local function ToggleAnchors()
 		_LOCK = nil
 	end
 end
-	
+
+-- TODO: import into oUF_Drak_Config
+
 do
 	local opt = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 	opt:Hide()
