@@ -24,7 +24,8 @@
 ## SavedVariablesPerCharacter: oUFDrakAuraConfig
 
 Libs\libs.xml
-Embeds\oUF_MovableFrames\movable.lua
 Features\module.xml
 Elements\module.xml
 oUF_Drak.xml
+
+Embeds\oUF_MovableFrames\movable.lua
