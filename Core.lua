@@ -8,16 +8,22 @@
 local _name, ns = ...
 local Media
 
-local toc = {
+-- import TOC info
+
+ns.toc = {
 	title = GetAddOnMetadata(_name, 'Title'),
 	version = GetAddOnMetadata(_name, 'Version')
 }
 
-local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4f" .. _name .. ":|r", tostringall(...)))
+-- debugging 
+
+ns.debug = function (...)
+	if ns.config.debug then ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4f" .. _name .. ":|r", tostringall(...))) end
 end
 
---debug("Loading Core.lua")
+local debug = ns.debug
+
+-- dependency check
 
 assert(oUF, _name .. " was unable to locate oUF install.")
 
@@ -53,15 +59,15 @@ do
 	rcolor[8][1], rcolor[8][2], rcolor[8][3] = 0.2, 1, 0.2 -- Exalted
 end
 
-------------------------------------------------------------------------
---	Load stuff
-------------------------------------------------------------------------
+-- create Loader frame
 
 local Loader = CreateFrame("Frame")
 Loader:RegisterEvent("ADDON_LOADED")
 Loader:SetScript("OnEvent", function(self, event, ...)
 	return self[event] and self[event](self, event, ...)
 end)
+
+-- create Options frame
 
 local Options = CreateFrame("Frame", "oUFDrakOptions")
 Options:Hide()
@@ -99,6 +105,8 @@ function Loader:ADDON_LOADED(event, addon)
 		customFilters = {},
 		deleted = {},
 	})
+	
+	debug("ADDON_LOADED")
 	
 	-- Remove default values
 	for id, flag in pairs(oUFDrakAuraConfig.customFilters) do
@@ -172,8 +180,8 @@ function Loader:ADDON_LOADED(event, addon)
 	self:RegisterEvent("MODIFIER_STATE_CHANGED")
 
 	-- Load options on demand
---@non-debug@
 	Options:SetScript("OnShow", function(self)
+		debug("Loading Options")
 		oUFDrak = ns
 		local loaded, reason = LoadAddOn(_name .. "_Config")
 		if not loaded then
@@ -184,11 +192,11 @@ function Loader:ADDON_LOADED(event, addon)
 			oUFDrak = nil
 		end
 	end)
---@end-non-debug@
 
 	SLASH_OUFDrak1 = "/douf"
 	function SlashCmdList.OUFDrak(cmd)
 		cmd = strlower(cmd)
+		debug("SlashCmdList", cmd)
 		if cmd == "buffs" or cmd == "debuffs" then
 			local tmp = {}
 			local func = cmd == "buffs" and UnitBuff or UnitDebuff
@@ -206,24 +214,27 @@ function Loader:ADDON_LOADED(event, addon)
 			else
 				DEFAULT_CHAT_FRAME:AddMessage(format("|cff00ddba" .. _name .. ":|r Your current target does not have any %s.", cmd))
 			end
+		elseif cmd == "debug" then
+			oUFDrakConfig.debug = not oUFDrakConfig.debug
+			print(_name .. ": Debugging " .. (oUFDrakConfig.debug and "Enable" or "Disabled"))
 		else
 			InterfaceOptionsFrame_OpenToCategory("oUF Drak")
 			InterfaceOptionsFrame_OpenToCategory("oUF Drak")
 		end
 	end
 	
-	DEFAULT_CHAT_FRAME:AddMessage(_name .. " " .. toc.version .. " Loaded")
-	DEFAULT_CHAT_FRAME:AddMessage(_name .. ": FastFocus " .. (ns.config.fastfocus and "Enabled" or "Disabled"))
-	DEFAULT_CHAT_FRAME:AddMessage(_name .. ": ExpandedZoom " ..(ns.config.expandzoom and "Enabled" or "Disabled"))
+	print(_name .. " " .. ns.toc.version .. " Loaded")
+	print(_name .. ": FastFocus " .. (ns.config.fastfocus and "Enabled" or "Disabled"))
+	print(_name .. ": ExpandedZoom " ..(ns.config.expandzoom and "Enabled" or "Disabled"))
 			
 end
 
 ------------------------------------------------------------------------
 
 function Loader:PLAYER_ENTERING_WORLD(event)
-	--config = oUFDrakConfig
+	debug(event)
 	if (ns.config.expandzoom) then
-		--debug("Expanding Zoom")
+		debug("Expanding Zoom")
 		ConsoleExec("CameraDistanceMaxFactor 3")
 		ConsoleExec("CameraDistanceMoveSpeed 40")
 		ConsoleExec("CameraDistanceSmoothSpeed 40")
@@ -231,6 +242,7 @@ function Loader:PLAYER_ENTERING_WORLD(event)
 end
 	
 function Loader:PLAYER_LOGOUT(event)
+	debug(event)
 	local function cleanDB(db, defaults)
 		if type(db) ~= "table" then return {} end
 		if type(defaults) ~= "table" then return db end
@@ -255,6 +267,7 @@ end
 ------------------------------------------------------------------------
 
 function Loader:PLAYER_FOCUS_CHANGED(event)
+	debug(event)
 	if UnitExists("focus") then
 		if UnitIsEnemy("focus", "player") then
 			PlaySound("igCreatureAggroSelect")
@@ -271,6 +284,7 @@ end
 -- Sound on target change
 
 function Loader:PLAYER_TARGET_CHANGED(event)
+	debug(event)
 	if UnitExists("target") then
 		if UnitIsEnemy("target", "player") then
 			PlaySound("igCreatureAggroSelect")
@@ -288,6 +302,7 @@ end
 
 local announcedPVP
 function Loader:UNIT_FACTION(event, unit)
+	debug(event)
 	if UnitIsPVPFreeForAll("player") or UnitIsPVP("player") then
 		if not announcedPVP then
 			announcedPVP = true
@@ -301,6 +316,7 @@ end
 -- Show all auras
 
 function Loader:MODIFIER_STATE_CHANGED(event, key, state)
+	debug(event)
 	if 	
 		( IsControlKeyDown() and (key == 'LALT' or key == 'RALT')) or
 		( IsAltKeyDown() and (key == 'LCTRL' or key == 'RCTRL')) 
@@ -360,6 +376,8 @@ end
 local FALLBACK_FONT_SIZE = 16 -- some Blizzard bug
 
 function ns.CreateFontString(parent, size, justify)
+	--debug("CreateFontString", parent:GetName(), size, justify)
+	
 	local file = Media:Fetch("font", ns.config.font) or STANDARD_TEXT_FONT
 	if not size or size == 0 then size = FALLBACK_FONT_SIZE end
 	size = size * ns.config.fontScale
@@ -375,6 +393,7 @@ function ns.CreateFontString(parent, size, justify)
 end
 
 function ns.SetAllFonts()
+	debug("SetAllFonts")
 	local file = Media:Fetch("font", ns.config.font) or STANDARD_TEXT_FONT
 	local outline = ns.config.fontOutline
 	local shadow = ns.config.fontShadow and 1 or 0
@@ -444,6 +463,7 @@ do
 end
 
 function ns.SetAllStatusBarTextures()
+	debug("SetAllTextures")
 	local file = Media:Fetch("statusbar", ns.config.statusbar) or "Interface\\TargetingFrame\\UI-StatusBar"
 	--print("SetAllFonts", strmatch(file, "[^/\\]+$"))
 
