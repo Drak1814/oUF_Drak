@@ -8,7 +8,6 @@ local _DBNAME = GetAddOnMetadata(_NAME, 'X-MoveDB')
 local _STYLE = GetAddOnMetadata(_NAME, 'X-MoveStyle')
 local _LOCK
 local _TITLE = GetAddOnMetadata(_NAME, 'X-MoveTitle')
-
 local _BACKDROP = {
 	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background";
 }
@@ -23,9 +22,12 @@ local print = function(...)
 	return print(print_fmt, ...)
 end
 
+local debug = _NS.debug
+
 local backdropPool = {}
 
 local getPoint = function(obj, anchor)
+	debug("getPoint", obj:GetName() or obj.unit, anchor:GetName())
 	if(not anchor) then
 		local UIx, UIy = UIParent:GetCenter()
 		local Ox, Oy = obj:GetCenter()
@@ -76,13 +78,15 @@ local getPoint = function(obj, anchor)
 	end
 end
 
-local getObjectInformation  = function(obj)
+local getObjectInformation = function(obj)
 	-- This won't be set if we're dealing with oUF <1.3.22. Due to this we're just
 	-- setting it to Unknown. It will only break if the user has multiple layouts
 	-- spawning the same unit or change between layouts.
 	local style = obj.style or 'Unknown'
 	local identifier = obj:GetName() or obj.unit
-
+	
+	debug("getObjectInformation", identifier)
+	
 	-- Are we dealing with header units?
 	local isHeader
 	local parent = obj:GetParent()
@@ -105,7 +109,9 @@ end
 local restoreDefaultPosition = function(style, identifier)
 	-- We've not saved any default position for this style.
 	if(not _DB.__INITIAL or not _DB.__INITIAL[style] or not _DB.__INITIAL[style][identifier]) then return end
-
+	
+	debug("restoreDefaultPosition", identifier)
+	
 	local obj, isHeader
 	for _, frame in next, oUF.objects do
 		local fStyle, fIdentifier, fIsHeader = getObjectInformation(frame)
@@ -153,6 +159,8 @@ local function restorePosition(obj)
 	local style, identifier, isHeader = getObjectInformation(obj)
 	-- We've not saved any custom position for this style.
 	if(not _DB[style] or not _DB[style][identifier]) then return end
+	
+	debug("restorePosition", identifier)
 
 	local target = isHeader or obj
 	if(not target._SetPoint) then
@@ -184,6 +192,7 @@ local function restorePosition(obj)
 end
 
 local restoreCustomPosition = function(style, ident)
+	debug("restoreCustomPosition", ident)
 	for _, obj in next, oUF.objects do
 		local objStyle, objIdent = getObjectInformation(obj)
 		if(objStyle == style and objIdent == ident) then
@@ -194,6 +203,9 @@ end
 
 local saveDefaultPosition = function(obj)
 	local style, identifier, isHeader = getObjectInformation(obj)
+	
+	debug("saveDefaultPosition", identifier)
+	
 	if(not _DB.__INITIAL) then
 		_DB.__INITIAL = {}
 	end
@@ -216,12 +228,18 @@ end
 
 local savePosition = function(obj, anchor)
 	local style, identifier, isHeader = getObjectInformation(obj)
+	
+	debug("savePosition", identifier)
+	
 	if(not _DB[style]) then _DB[style] = {} end
 
 	_DB[style][identifier] = getPoint(isHeader or obj, anchor)
 end
 
 local saveCustomPosition = function(style, ident, point, x, y, scale)
+
+	debug("saveCustomPosition", ident, point, x, y, scale)
+	
 	-- Shouldn't really be the case, but you never know!
 	if(not _DB[style]) then _DB[style] = {} end
 
@@ -234,7 +252,7 @@ local saveCustomPosition = function(style, ident, point, x, y, scale)
 	}
 end
 
--- Attempt to figure out a more sane name to dispaly.
+-- Attempt to figure out a more sane name to display
 local smartName
 do
 	local nameCache = {}
@@ -347,12 +365,13 @@ do
 end
 
 do
-	local frame = CreateFrame"Frame"
+	local frame = CreateFrame("Frame")
 	frame:SetScript("OnEvent", function(self, event)
 		return self[event](self)
 	end)
 
 	function frame:VARIABLES_LOADED()
+		debug("moveableFrame", "VARIABLE_LOADED")
 		-- I honestly don't trust the load order of SVs.
 		_DB = _G[_DBNAME] or {}
 		_G[_DBNAME] = _DB
@@ -382,6 +401,7 @@ do
 	frame:RegisterEvent"VARIABLES_LOADED"
 
 	function frame:PLAYER_REGEN_DISABLED()
+		debug("moveableFrame", "PLAYER_REGEN_DISABLED")
 		if(_LOCK) then
 			print("Anchors hidden due to combat.")
 			for k, bdrop in next, backdropPool do
@@ -553,6 +573,7 @@ local function ToggleAnchors()
 	if(InCombatLockdown()) then
 		return print("Frames cannot be toggled while in combat")
 	end
+	debug("ToggleAnchors")
 	if(not _LOCK) then
 		for k, obj in next, oUF.objects do
 			local style, identifier, isHeader = getObjectInformation(obj)
@@ -573,12 +594,13 @@ end
 do
 	local opt = CreateFrame("Frame", nil, InterfaceOptionsFramePanelContainer)
 	opt:Hide()
-
 	opt.name = _TITLE
+	opt.parent = "oUFDrakOptions"
 	opt:SetScript("OnShow", function(self)
+		debug("moveableOptions", "OnShow")
 		local title = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 		title:SetPoint('TOPLEFT', 16, -16)
-		title:SetText(_TITLE)
+		title:SetText(self.name)
 
 		local anchors = CreateFrame("Button", "oUFDrakMoveAnchors", self, "UIPanelButtonTemplate")
 		anchors:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', 0, -8)
@@ -759,6 +781,7 @@ do
 		end
 
 		function createOrUpdate()
+			debug("createOrUpdate")
 			local data = self.data or {}
 
 			local slideHeight = 0
