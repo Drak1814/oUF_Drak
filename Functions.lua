@@ -13,11 +13,7 @@ local playerUnits = { player = true, pet = true, vehicle = true }
 local si = ns.si
 ns.noop = noop
 
-local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
-end
-
---debug("Loading Functions.lua")
+local debug = ns.debug
 
 ------------------------------------------------------------------------
 
@@ -98,22 +94,22 @@ end
 
 function ns.UpdateBorder(self)
 	local threat, debuff, dispellable = self.threatLevel, self.debuffType, self.debuffDispellable
-	-- print("UpdateBorder", self.unit, "threatLevel", threat, "debuffType", debuff, "debuffDispellable", dispellable)
+	debug("UpdateBorder", self.unit, "threatLevel", threat, "debuffType", debuff, "debuffDispellable", dispellable)
 
 	local color, glow
 	if debuff and dispellable then
-		-- print(self.unit, "has dispellable debuff:", debuff)
+		debug(self.unit, "has dispellable debuff:", debuff)
 		color = colors.debuff[debuff]
 		glow = true
 	elseif threat and threat > 1 then
-		-- print(self.unit, "has aggro:", threat)
+		debug(self.unit, "has aggro:", threat)
 		color = colors.threat[threat]
 		glow = true
 	elseif debuff and not ns.config.dispelFilter then
-		-- print(self.unit, "has debuff:", debuff)
+		debug(self.unit, "has debuff:", debuff)
 		color = colors.debuff[debuff]
 	elseif threat and threat > 0 then
-		-- print(self.unit, "has high threat")
+		debug(self.unit, "has high threat")
 		color = colors.threat[threat]
 	end
 
@@ -208,7 +204,7 @@ do
 	    = UnitHealth, UnitHealthMax, UnitGetTotalAbsorbs, UnitGetIncomingHeals
 
 	function ns.HealPrediction_Override(self, event, unit)
-		--print("HealPrediction Override", event, unit)
+		debug("HealPrediction Override", event, unit)
 		local element = self.HealPrediction
 		local parent = self.Health
 
@@ -344,7 +340,7 @@ function ns.Chi_Override(self, event, unit, powerType)
 	local num = UnitPower("player", SPELL_POWER_CHI)
 	local max = UnitPowerMax("player", SPELL_POWER_CHI)
 
-	--print("UpdateChi", num, max)
+	debug("UpdateChi", num, max)
 	ns.Orbs.Update(self.ClassIcons, num, max)
 end
 
@@ -360,7 +356,7 @@ function ns.HolyPower_Override(self, event, unit, powerType)
 	local num = UnitPower("player", SPELL_POWER_HOLY_POWER)
 	local max = UnitPowerMax("player", SPELL_POWER_HOLY_POWER)
 
-	--print("UpdateHolyPower", num, max)
+	debug("UpdateHolyPower", num, max)
 	ns.Orbs.Update(self.ClassIcons, num, max)
 end
 
@@ -376,7 +372,7 @@ function ns.ShadowOrbs_Override(self, event, unit, powerType)
 	local num = UnitPower("player", SPELL_POWER_SHADOW_ORBS)
 	local max = UnitPowerMax("player", SPELL_POWER_SHADOW_ORBS)
 
-	--print("UpdateShadowOrbs", num, max)
+	debug("UpdateShadowOrbs", num, max)
 	ns.Orbs.Update(self.ClassIcons, num, max)
 end
 
@@ -392,7 +388,7 @@ function ns.SoulShards_Override(self, event, unit, powerType)
 	local num = UnitPower("player", SPELL_POWER_SOUL_SHARDS)
 	local max = UnitPowerMax("player", SPELL_POWER_SOUL_SHARDS)
 
-	--print("UpdateShadowOrbs", num, max)
+	debug("UpdateShadowOrbs", num, max)
 	ns.Orbs.Update(self.ClassIcons, num, max)
 end
 
@@ -401,7 +397,7 @@ end
 ------------------------------------------------------------------------
 
 function ns.DemonicFury_PostUpdate(bar, fury, maxFury, inMetamorphosis)
-	--print("DemonicFury PostUpdate", fury, maxFury, inMetamorphosis)
+	debug("DemonicFury PostUpdate", fury, maxFury, inMetamorphosis)
 	bar.value:SetFormattedText("%.0f%%", fury / maxFury)
 end
 
@@ -429,7 +425,7 @@ function ns.Stagger_PostUpdate(bar, maxHealth, stagger, staggerPercent, r, g, b)
 	if staggerPercent < 5 then
 		return bar:Hide()
 	end
-	--print("Stagger PostUpdate", stagger, staggerPercent)
+	debug("Stagger PostUpdate", stagger, staggerPercent)
 	bar.value:SetFormattedText("%.0f%%", staggerPercent)
 	bar:Show()
 end
@@ -441,7 +437,7 @@ end
 local PLAYER_FACTION = UnitFactionGroup("player")
 
 function ns.PvP_PostUpdate(element, status)
-	--print("PvP PostUpdate", element.__owner.unit, status)
+	debug("PvP PostUpdate", element.__owner.unit, status)
 	if not status then return end
 	if status == PLAYER_FACTION then
 		return element:Hide()
@@ -558,7 +554,7 @@ function ns.Threat_Override(frame, event, unit)
 	end
 
 	if frame.threatLevel == status then return end
-	--print("ThreatHighlightOverride", frame.unit, status)
+	debug("ThreatHighlightOverride", frame.unit, status)
 
 	frame.threatLevel = status
 	frame:UpdateBorder()
@@ -572,7 +568,7 @@ function ns.DispelHighlight_Override(element, debuffType, canDispel)
 	local frame = element.__owner
 
 	if frame.debuffType == debuffType then return end
-	-- print("DispelHighlightOverride", unit, debuffType, canDispel)
+	debug("DispelHighlightOverride", unit, debuffType, canDispel)
 
 	frame.debuffType = debuffType
 	frame.debuffDispellable = canDispel
