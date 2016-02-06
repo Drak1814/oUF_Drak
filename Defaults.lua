@@ -7,15 +7,10 @@
 
 local _, ns = ...
 
-local function debug(...)
-	ChatFrame3:AddMessage(strjoin(" ", "|cffff7f4foUF_Drak:|r", tostringall(...)))
-end
-
---debug("Loading Defaults.lua")
-
 -- Default Shared Config
 
 ns.configDefault = {
+
 	width = 200,
 	height = 30,
 	powerHeight = 0.3,				-- how much of the frame's height should be occupied by the power bar
@@ -59,7 +54,8 @@ ns.configDefault = {
 	PVP = false, -- enable PVP mode, currently only affects aura filtering
 	
 	fastfocus = true,
-	expandzoom = true
+	expandzoom = true,
+	debug = false
 	
 }
 
