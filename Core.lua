@@ -655,6 +655,7 @@ function ns.savePosition(obj, anchor)
 	ns.uconfig[unit].position.custom = ns.getPosition(isHeader or obj, anchor)
 end
 
+--[=[
 function ns.saveUnitPosition(unit, point, x, y, scale)
 	debug("saveUnitPosition", unit, point, x, y, scale)
 	if not ns.uconfig[unit] then ns.uconfig[unit] = {} end
@@ -667,6 +668,7 @@ function ns.saveUnitPosition(unit, point, x, y, scale)
 		scale = scale
 	}
 end
+]=]
 
 -- Attempt to figure out a more sane name to display
 ns.nameCache = {}
