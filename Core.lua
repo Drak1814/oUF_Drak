@@ -777,7 +777,7 @@ function ns.getGrabber(obj, isHeader)
 	name:SetJustifyH('CENTER')
 	name:SetFont(GameFontNormal:GetFont(), 12)
 	name:SetTextColor(1, 1, 1)
-
+--[=[
 	local scale = CreateFrame("Button", nil, grabber)
 	scale:SetPoint('BOTTOMRIGHT')
 	scale:SetSize(16, 16)
@@ -805,7 +805,7 @@ function ns.getGrabber(obj, isHeader)
 		grabber:StopMovingOrSizing()
 		ns.savePosition(grabber.obj, grabber)
 	end)
-	
+]=]
 	grabber.name = name
 	grabber.obj = obj
 	grabber.header = isHeader
@@ -874,7 +874,7 @@ function ns.getGrabber(obj, isHeader)
 		self:ClearAllPoints()
 		self:SetAllPoints(self.header or self.obj)
 	end)
-
+--[=[
 	grabber:SetScript("OnSizeChanged", function(self, width, height)
 		local baseWidth, baseHeight = self.baseWidth, self.baseHeight
 
@@ -889,7 +889,7 @@ function ns.getGrabber(obj, isHeader)
 		local SetScale = target._SetScale or target.SetScale
 		SetScale(target, scale)
 	end)
-
+]=]
 	ns.grabberPool[target] = grabber
 
 	return grabber
