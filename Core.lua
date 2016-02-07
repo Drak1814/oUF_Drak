@@ -12,7 +12,8 @@ local Media
 
 ns.toc = {
 	title = GetAddOnMetadata(_name, 'Title'),
-	version = GetAddOnMetadata(_name, 'Version')
+	version = GetAddOnMetadata(_name, 'Version'),
+	style = GetAddOnMetadata(_name, 'X-oUF-Style'),
 }
 
 -- debugging 
@@ -29,6 +30,7 @@ assert(oUF, _name .. " was unable to locate oUF install.")
 
 ns.fontstrings = {}
 ns.statusbars = {}
+ns.grabberPool = {}
 
 ------------------------------------------------------------------------
 --	Colors
@@ -166,11 +168,15 @@ function Loader:ADDON_LOADED(event, addon)
 	self:RegisterEvent("PLAYER_LOGOUT")
 
 	-- Go
+	oUF:RegisterInitCallback(ns.restorePosition)
 	oUF:Factory(ns.Factory)
 	
 	-- Startup events
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+	-- Combat events
+	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	
 	-- Sounds for target/focus changing and PVP flagging
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
@@ -217,6 +223,8 @@ function Loader:ADDON_LOADED(event, addon)
 		elseif cmd == "debug" then
 			oUFDrakConfig.debug = not oUFDrakConfig.debug
 			print(_name .. ": Debugging " .. (oUFDrakConfig.debug and "Enable" or "Disabled"))
+		elseif cmd == "move" then
+			ns.ToggleGrabbers()
 		else
 			InterfaceOptionsFrame_OpenToCategory("oUF Drak")
 			InterfaceOptionsFrame_OpenToCategory("oUF Drak")
@@ -242,7 +250,7 @@ function Loader:PLAYER_ENTERING_WORLD(event)
 end
 	
 function Loader:PLAYER_LOGOUT(event)
-	debug(event)
+	--debug(event)
 	local function cleanDB(db, defaults)
 		if type(db) ~= "table" then return {} end
 		if type(defaults) ~= "table" then return db end
@@ -266,6 +274,17 @@ end
 
 ------------------------------------------------------------------------
 
+function Loader:PLAYER_REGEN_DISABLED(event)
+	debug(event)
+	if ns.anchor then
+		print("Anchors hidden due to combat.")
+		for k, bdrop in next, backdropPool do
+			bdrop:Hide()
+		end
+		ns.anchor = nil
+	end
+end
+	
 function Loader:PLAYER_FOCUS_CHANGED(event)
 	debug(event)
 	if UnitExists("focus") then
@@ -493,3 +512,409 @@ function ns.SetAllStatusBarTextures()
 		bar.bg:SetVertexColor(r, g, b, a)
 	end
 end
+
+-- Custom Frame Positions
+
+function ns.getObjectInfo(obj)
+	local style = obj.style or 'Unknown'
+	local ident = obj.unit or obj:GetName()
+
+	-- Is this oUF frame from us?
+	if style ~= ns.toc.style then return end
+	
+	-- Are we dealing with header units?
+	local isHeader
+	local parent = obj:GetParent()
+
+	if(parent) then
+		if(parent:GetAttribute'initialConfigFunction' and parent.style) then
+			isHeader = parent
+			ident = parent.unit or parent:GetName()
+		elseif(parent:GetAttribute'oUF-onlyProcessChildren') then
+			isHeader = parent:GetParent()
+			ident = isHeader.unit or isHeader:GetName()
+		end
+	end 
+
+	return ident, isHeader
+end
+
+function ns.getPosition(obj, anchor)
+	debug("getPosition", obj.unit)
+	if not anchor then
+		local UIx, UIy = UIParent:GetCenter()
+		local Ox, Oy = obj:GetCenter()
+
+		-- Frame doesn't really have a positon yet.
+		if(not Ox) then return end
+
+		local OS = obj:GetScale()
+		Ox, Oy = Ox * OS, Oy * OS
+
+		local UIWidth, UIHeight = UIParent:GetRight(), UIParent:GetTop()
+
+		local LEFT = UIWidth / 3
+		local RIGHT = UIWidth * 2 / 3
+
+		local point, x, y
+		if(Ox >= RIGHT) then
+			point = 'RIGHT'
+			x = obj:GetRight() - UIWidth
+		elseif(Ox <= LEFT) then
+			point = 'LEFT'
+			x = obj:GetLeft()
+		else
+			x = Ox - UIx
+		end
+
+		local BOTTOM = UIHeight / 3
+		local TOP = UIHeight * 2 / 3
+
+		if(Oy >= TOP) then
+			point = 'TOP' .. (point or '')
+			y = obj:GetTop() - UIHeight
+		elseif(Oy <= BOTTOM) then
+			point = 'BOTTOM' .. (point or '')
+			y = obj:GetBottom()
+		else
+			if(not point) then point = 'CENTER' end
+			y = Oy - UIy
+		end
+
+		return { point = point, parent = 'UIParent', x = x, y = y, scale = OS }
+
+	else
+	
+		local point, parent, _, x, y = anchor:GetPoint()
+		return { point = point, parent = 'UIParent', x = x, y = y, scale = obj:GetScale() }
+
+	end
+end
+
+function ns.restorePosition(obj)
+	if InCombatLockdown() then return end
+
+	local unit, isHeader = ns.getObjectInfo(obj)
+	if not unit then return end
+	
+	debug("restorePosition", unit)
+	
+	-- We've not saved any custom position for this style.
+	if not ns.uconfig[unit] 
+		or	not ns.uconfig[unit].position 
+		or not ns.uconfig[unit].position.custom 
+		then return end
+
+	local pos = ns.uconfig[unit].position.custom
+	
+	debug("restorePosition", unit)
+
+	local target = isHeader or obj 
+	if not target._SetPoint then
+		target._SetPoint = target.SetPoint
+		target.SetPoint = ns.restorePosition
+		target._SetScale = target.SetScale
+		target.SetScale = ns.restorePosition
+	end
+	target:ClearAllPoints()
+
+	if not pos.scale then pos.scale = 1	end
+
+	if scale then
+		target:_SetScale(pos.scale)
+	else
+		pos.scale = target:GetScale()
+	end
+	
+	target:_SetPoint(pos.point, pos.parent, pos.point, pos.x / pos.scale, pos.y / pos.scale)
+end
+ 
+function ns.saveDefaultPosition(obj)
+	local unit, isHeader = ns.getObjectInfo(obj)
+	if not unit then return end
+	debug("saveDefaultPosition", unit)
+	if not ns.uconfig[unit] then ns.uconfig[unit] = {} end
+	if not ns.uconfig[unit].position then ns.uconfig[unit].position = {} end
+	if not ns.uconfig[unit].position.default then
+		local pos
+		if isHeader then
+			pos = ns.getPosition(isHeader)
+		else
+			pos = ns.getPosition(obj)
+		end
+		ns.uconfig[unit].position.default = pos
+	end
+end
+
+function ns.savePosition(obj, anchor)
+	local unit, isHeader = ns.getObjectInfo(obj)
+	if not unit then return end
+	debug("savePosition", unit)
+	if not ns.uconfig[unit] then ns.uconfig[unit] = {} end
+	if not ns.uconfig[unit].position then ns.uconfig[unit].position = {} end
+	ns.uconfig[unit].position.custom = ns.getPosition(isHeader or obj, anchor)
+end
+
+function ns.saveUnitPosition(unit, point, x, y, scale)
+	debug("saveUnitPosition", unit, point, x, y, scale)
+	if not ns.uconfig[unit] then ns.uconfig[unit] = {} end
+	if not ns.uconfig[unit].position then ns.uconfig[unit].position = {} end	
+	ns.uconfig[unit].position.custom = {
+		point = point,
+		parent = 'UIParent',
+		x = x,
+		y = y,
+		scale = scale
+	}
+end
+
+-- Attempt to figure out a more sane name to display
+ns.nameCache = {}
+function ns.smartName(obj, header)
+	local validNames = {
+		'player',
+		'pet',
+		'focus',
+		'focustarget',
+		'target',
+		'targettarget'
+	}
+	
+	local function validName(smartName)
+		-- Not really a valid name, but we'll accept it for simplicities sake.
+		if tonumber(smartName) then
+			return smartName
+		end
+
+		if type(smartName) == 'string' then
+			-- strip away trailing s from pets, but don't touch boss/focus.
+			smartName = smartName:gsub('([^us])s$', '%1')
+
+			for _, v in pairs(validNames) do
+				if(v == smartName) then	return smartName end
+			end
+
+			if(
+				smartName:match'^party%d?$' or
+				smartName:match'^arena%d?$' or
+				smartName:match'^boss%d?$' or
+				smartName:match'^partypet%d?$' or
+				smartName:match'^raid%d?%d?$' or
+				smartName:match'%w+target$' or
+				smartName:match'%w+pet$'
+				) then
+				return smartName
+			end
+		end
+	end
+
+	local function guessName(...)
+		local name = validName(select(1, ...))
+		local n = select('#', ...)
+		if n > 1 then
+			for i=2, n do
+				local inp = validName(select(i, ...))
+				if inp then	name = (name or '') .. inp end
+			end
+		end
+		return name
+	end
+
+	local function smartString(name)
+		if ns.nameCache[name] then return ns.nameCache[name] end
+
+		-- Here comes the substitute train!
+		local n = name
+			:gsub('ToT', 'targettarget')
+			:gsub('(%l)(%u)', '%1_%2')
+			:gsub('([%l%u])(%d)', '%1_%2_')
+			:gsub('Main_', 'Main')
+			:lower()
+
+		n = guessName(string.split('_', n))
+		if n then
+			ns.nameCache[name] = n
+			return n
+		end
+
+		return name
+	end
+
+	if type(obj) == 'string' then
+		return smartString(obj)
+	elseif header then
+		return smartString(header:GetName())
+	else
+		local name = obj:GetName()
+		if name then return smartString(name) end
+		return obj.unit or '<unknown>'
+	end
+end
+
+function ns.getGrabber(obj, isHeader)
+
+	local target = isHeader or obj
+	if not target:GetCenter() then return end
+	if ns.grabberPool[target] then return ns.grabberPool[target] end
+
+	local grabber = CreateFrame("Frame")
+	grabber:SetParent(UIParent)
+	grabber:Hide()
+
+	grabber:SetBackdrop({bgFile = "Interface\\Tooltips\\UI-Tooltip-Background"})
+	grabber:SetFrameStrata('TOOLTIP')
+	grabber:SetAllPoints(target)
+
+	grabber:EnableMouse(true)
+	grabber:SetMovable(true)
+	grabber:SetResizable(true)
+	grabber:RegisterForDrag("LeftButton")
+
+	local name = grabber:CreateFontString(nil, 'OVERLAY', "GameFontNormal")
+	name:SetPoint('CENTER')
+	name:SetJustifyH('CENTER')
+	name:SetFont(GameFontNormal:GetFont(), 12)
+	name:SetTextColor(1, 1, 1)
+
+	local scale = CreateFrame("Button", nil, grabber)
+	scale:SetPoint('BOTTOMRIGHT')
+	scale:SetSize(16, 16)
+
+	scale:SetNormalTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up]]
+	scale:SetHighlightTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight]]
+	scale:SetPushedTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down]]
+
+	scale:SetScript("OnMouseDown", function(self)
+		local grabber = self:GetParent()
+		ns.saveDefaultPosition(grabber.obj)
+		grabber:StartSizing('BOTTOMRIGHT')
+
+		local frame = grabber.header or grabber.obj
+		frame:ClearAllPoints()
+		frame:SetAllPoints(grabber)
+
+		self:SetButtonState("PUSHED", true)
+	end)
+
+	scale:SetScript("OnMouseUp", function(self)
+		local grabber = self:GetParent()
+		self:SetButtonState("NORMAL", false)
+
+		grabber:StopMovingOrSizing()
+		ns.savePosition(grabber.obj, grabber)
+	end)
+	
+	grabber.name = name
+	grabber.obj = obj
+	grabber.header = isHeader
+	grabber.target = target
+
+	grabber:SetBackdropBorderColor(0, .9, 0)
+	grabber:SetBackdropColor(0, .9, 0)
+
+	grabber.baseWidth, grabber.baseHeight = obj:GetSize()
+
+	-- We have to define a minHeight on the header if it doesn't have one. The
+	-- reason for this is that the header frame will have an height of 0.1 when
+	-- it doesn't have any frames visible.
+	if isHeader and
+		( 	
+			not isHeader:GetAttribute("minHeight") and math.floor(isHeader:GetHeight()) == 0 
+			or not isHeader:GetAttribute("minWidth") and math.floor(isHeader:GetWidth()) == 0 
+		)
+	then
+		isHeader:SetHeight(obj:GetHeight())
+		isHeader:SetWidth(obj:GetWidth())
+
+		if not isHeader:GetAttribute("minHeight") then
+			isHeader.dirtyMinHeight = true
+			isHeader:SetAttribute('minHeight', obj:GetHeight())
+		end
+
+		if not isHeader:GetAttribute("minWidth") then
+			isHeader.dirtyMinWidth = true
+			isHeader:SetAttribute("minWidth", obj:GetWidth())
+		end
+	elseif isHeader then
+		grabber.baseWidth, grabber.baseHeight = isHeader:GetSize()
+	end
+	
+	grabber:SetScript("OnShow", function(self)
+		return self.name:SetText(ns.smartName(self.obj, self.header))
+	end)
+	
+	grabber:SetScript("OnHide",  function(self)
+		if self.dirtyMinHeight then
+			self:SetAttribute('minHeight', nil)
+		end
+
+		if self.dirtyMinWidth then
+			self:SetAttribute('minWidth', nil)
+		end
+	end)
+	
+	grabber:SetScript("OnDragStart", function(self)
+		ns.saveDefaultPosition(self.obj)
+		self:StartMoving()
+
+		local frame = self.header or self.obj
+		frame:ClearAllPoints()
+		frame:SetAllPoints(self)
+	end)
+	
+	grabber:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		ns.savePosition(self.obj, self)
+
+		-- Restore the initial anchoring, so the anchor follows the frame when we
+		-- edit positions through the UI.
+		ns.restorePosition(self.obj)
+		self:ClearAllPoints()
+		self:SetAllPoints(self.header or self.obj)
+	end)
+
+	grabber:SetScript("OnSizeChanged", function(self, width, height)
+		local baseWidth, baseHeight = self.baseWidth, self.baseHeight
+
+		local scale = width / baseWidth
+
+		if scale <= .3 then
+			scale = .3
+		end
+
+		self:SetSize(scale * baseWidth, scale * baseHeight)
+		local target = self.target
+		local SetScale = target._SetScale or target.SetScale
+		SetScale(target, scale)
+	end)
+
+	ns.grabberPool[target] = grabber
+
+	return grabber
+end
+
+function ns.ToggleGrabbers()
+	if InCombatLockdown() then
+		print("Frames cannot be toggled while in combat")
+		return
+	end
+	
+	debug("ToggleAnchors")
+	
+	if not ns.anchor then
+		for k, obj in next, oUF.objects do
+			local unit, isHeader = ns.getObjectInfo(obj)
+			if unit then
+				local grabber = ns.getGrabber(obj, isHeader)
+				if grabber then grabber:Show() end
+			end
+		end
+		ns.anchor = true
+	else
+		for _, grabber in pairs(ns.grabberPool) do
+			grabber:Hide()
+		end
+		ns.anchor = nil
+	end
+end
+

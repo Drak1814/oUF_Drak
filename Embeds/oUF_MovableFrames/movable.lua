@@ -77,7 +77,7 @@ local getPoint = function(obj, anchor)
 
 	end
 end
-
+--[=[
 local getObjectInformation = function(obj)
 	-- This won't be set if we're dealing with oUF <1.3.22. Due to this we're just
 	-- setting it to Unknown. It will only break if the user has multiple layouts
@@ -105,7 +105,7 @@ local getObjectInformation = function(obj)
 
 	return style, identifier, isHeader
 end
-
+]=]
 local restoreDefaultPosition = function(style, identifier)
 	-- We've not saved any default position for this style.
 	if(not _DB.__INITIAL or not _DB.__INITIAL[style] or not _DB.__INITIAL[style][identifier]) then return end
@@ -153,7 +153,7 @@ local restoreDefaultPosition = function(style, identifier)
 		end
 	end
 end
-
+--[=[
 local function restorePosition(obj)
 	if(InCombatLockdown()) then return end
 	local style, identifier, isHeader = getObjectInformation(obj)
@@ -190,8 +190,8 @@ local function restorePosition(obj)
 	target:_SetPoint(point, parentName, point, x / scale, y / scale)
 	
 end
-
-local restoreCustomPosition = function(style, ident)
+]=]
+local restoreUnitPosition = function(style, ident)
 	debug("restoreCustomPosition", ident)
 	for _, obj in next, oUF.objects do
 		local objStyle, objIdent = getObjectInformation(obj)
@@ -200,7 +200,7 @@ local restoreCustomPosition = function(style, ident)
 		end
 	end
 end
-
+--[=[
 local saveDefaultPosition = function(obj)
 	local style, identifier, isHeader = getObjectInformation(obj)
 	
@@ -235,8 +235,9 @@ local savePosition = function(obj, anchor)
 
 	_DB[style][identifier] = getPoint(isHeader or obj, anchor)
 end
-
-local saveCustomPosition = function(style, ident, point, x, y, scale)
+]=]
+--[=[
+local saveUnitPosition = function(style, ident, point, x, y, scale)
 
 	debug("saveCustomPosition", ident, point, x, y, scale)
 	
@@ -251,29 +252,18 @@ local saveCustomPosition = function(style, ident, point, x, y, scale)
 		scale = scale
 	}
 end
-
+]=]
 -- Attempt to figure out a more sane name to display
 local smartName
 do
 	local nameCache = {}
 	local validNames = {
 		'player',
-		'target',
-		'focus',
-		'raid',
 		'pet',
-		'party',
-		'maintank',
-		'mainassist',
-		'arena',
-	}
-
-	local rewrite = {
-		mt = 'maintank',
-		mtt = 'maintanktarget',
-
-		ma = 'mainassist',
-		mat = 'mainassisttarget',
+		'focus',
+		'focustarget',
+		'target',
+		'targettarget'
 	}
 
 	local validName = function(smartName)
@@ -285,10 +275,6 @@ do
 		if(type(smartName) == 'string') then
 			-- strip away trailing s from pets, but don't touch boss/focus.
 			smartName = smartName:gsub('([^us])s$', '%1')
-
-			if(rewrite[smartName]) then
-				return rewrite[smartName]
-			end
 
 			for _, v in next, validNames do
 				if(v == smartName) then
@@ -365,17 +351,18 @@ do
 end
 
 -- TODO: Import into oUF_Drak (Loader?)
+--[=[
 do
 	local frame = CreateFrame("Frame")
 	frame:SetScript("OnEvent", function(self, event)
 		return self[event](self)
 	end)
-
 	function frame:VARIABLES_LOADED()
 		debug("moveableFrame", "VARIABLE_LOADED")
 		-- I honestly don't trust the load order of SVs.
 		_DB = _G[_DBNAME] or {}
 		_G[_DBNAME] = _DB
+		
 		-- Got to catch them all!
 		for _, obj in next, oUF.objects do
 			restorePosition(obj)
@@ -397,9 +384,9 @@ do
 		end
 
 		oUF:RegisterInitCallback(restorePosition)
-		self:UnregisterEvent"VARIABLES_LOADED"
+		self:UnregisterEvent("VARIABLES_LOADED")
 	end
-	frame:RegisterEvent"VARIABLES_LOADED"
+	frame:RegisterEvent("VARIABLES_LOADED")
 
 	function frame:PLAYER_REGEN_DISABLED()
 		debug("moveableFrame", "PLAYER_REGEN_DISABLED")
@@ -413,7 +400,8 @@ do
 	end
 	frame:RegisterEvent"PLAYER_REGEN_DISABLED"
 end
-
+]=]
+--[=[
 local getBackdrop
 do
 	local OnShow = function(self)
@@ -490,35 +478,35 @@ do
 		if(not target:GetCenter()) then return end
 		if(backdropPool[target]) then return backdropPool[target] end
 
-		local backdrop = CreateFrame"Frame"
+		local backdrop = CreateFrame("Frame")
 		backdrop:SetParent(UIParent)
 		backdrop:Hide()
 
 		backdrop:SetBackdrop(_BACKDROP)
-		backdrop:SetFrameStrata"TOOLTIP"
+		backdrop:SetFrameStrata('TOOLTIP')
 		backdrop:SetAllPoints(target)
 
 		backdrop:EnableMouse(true)
 		backdrop:SetMovable(true)
 		backdrop:SetResizable(true)
-		backdrop:RegisterForDrag"LeftButton"
+		backdrop:RegisterForDrag("LeftButton")
 
-		local name = backdrop:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-		name:SetPoint"CENTER"
-		name:SetJustifyH"CENTER"
+		local name = backdrop:CreateFontString(nil, 'OVERLAY', "GameFontNormal")
+		name:SetPoint('CENTER')
+		name:SetJustifyH('CENTER')
 		name:SetFont(GameFontNormal:GetFont(), 12)
 		name:SetTextColor(1, 1, 1)
 
-		local scale = CreateFrame('Button', nil, backdrop)
-		scale:SetPoint'BOTTOMRIGHT'
+		local scale = CreateFrame("Button", nil, backdrop)
+		scale:SetPoint('BOTTOMRIGHT')
 		scale:SetSize(16, 16)
 
 		scale:SetNormalTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up]]
 		scale:SetHighlightTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight]]
 		scale:SetPushedTexture[[Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down]]
 
-		scale:SetScript('OnMouseDown', OnMouseDown)
-		scale:SetScript('OnMouseUp', OnMouseUp)
+		scale:SetScript("OnMouseDown", OnMouseDown)
+		scale:SetScript("OnMouseUp", OnMouseUp)
 
 		backdrop.name = name
 		backdrop.obj = obj
@@ -536,40 +524,41 @@ do
 		if(
 			isHeader and
 			(
-				not isHeader:GetAttribute'minHeight' and math.floor(isHeader:GetHeight()) == 0 or
-				not isHeader:GetAttribute'minWidth' and math.floor(isHeader:GetWidth()) == 0
+				not isHeader:GetAttribute("minHeight") and math.floor(isHeader:GetHeight()) == 0 or
+					not isHeader:GetAttribute("minWidth") and math.floor(isHeader:GetWidth()) == 0
 			)
 		) then
 			isHeader:SetHeight(obj:GetHeight())
 			isHeader:SetWidth(obj:GetWidth())
 
-			if(not isHeader:GetAttribute'minHeight') then
+			if(not isHeader:GetAttribute("minHeight")) then
 				isHeader.dirtyMinHeight = true
 				isHeader:SetAttribute('minHeight', obj:GetHeight())
 			end
 
-			if(not isHeader:GetAttribute'minWidth') then
+			if(not isHeader:GetAttribute("minWidth")) then
 				isHeader.dirtyMinWidth = true
-				isHeader:SetAttribute('minWidth', obj:GetWidth())
+				isHeader:SetAttribute("minWidth", obj:GetWidth())
 			end
 		elseif(isHeader) then
 			backdrop.baseWidth, backdrop.baseHeight = isHeader:GetSize()
 		end
 
 		backdrop:SetScript("OnShow", OnShow)
-		backdrop:SetScript('OnHide', OnHide)
+		backdrop:SetScript("OnHide", OnHide)
 
 		backdrop:SetScript("OnDragStart", OnDragStart)
 		backdrop:SetScript("OnDragStop", OnDragStop)
 
-		backdrop:SetScript('OnSizeChanged', OnSizeChanged)
+		backdrop:SetScript("OnSizeChanged", OnSizeChanged)
 
 		backdropPool[target] = backdrop
 
 		return backdrop
 	end
 end
-
+]=]
+--[=[
 local function ToggleAnchors()
 	if(InCombatLockdown()) then
 		return print("Frames cannot be toggled while in combat")
@@ -591,7 +580,7 @@ local function ToggleAnchors()
 		_LOCK = nil
 	end
 end
-
+]=]
 -- TODO: import into oUF_Drak_Config
 
 do
