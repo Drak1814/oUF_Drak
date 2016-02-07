@@ -899,7 +899,7 @@ function ns.ToggleGrabbers()
 		return
 	end
 	
-	debug("ToggleAnchors")
+	debug("ToggleGrabbers")
 	
 	if not ns.anchor then
 		for k, obj in next, oUF.objects do
