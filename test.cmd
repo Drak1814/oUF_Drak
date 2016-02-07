@@ -1,1 +1,0 @@
-robocopy "%HOMEPATH%\Documents\My Projects\oUF_Drak" "%PROGRAMFILES(X86)%\World of Warcraft\Interface\AddOns\oUF_Drak" /E /XD .git /XF test.cmd /PURGE
