@@ -764,8 +764,8 @@ function ns.Factory(oUF)
 	local DisableBlizzard = oUF.DisableBlizzard
 	function oUF:DisableBlizzard(unit) end
 
-	oUF:RegisterStyle("Drak", Spawn)
-	oUF:SetActiveStyle("Drak")
+	oUF:RegisterStyle(ns.toc.style, Spawn)
+	oUF:SetActiveStyle(ns.toc.style)
 
 	local initialConfigFunction = [[
 		self:SetAttribute("initial-width", %d)
