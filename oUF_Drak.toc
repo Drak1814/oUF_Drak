@@ -13,7 +13,9 @@
 ## X-Copyright: Copyright (c) 2016 Drak. All rights reserved.
 ## X-Website: http://www.wowinterface.com/downloads/info13993-oUFPhanx.html
 
+## X-oUF: dUF
 ## X-oUF-Style: Drak
+
 ## X-MoveDB: oUFDrakMove
 ## X-MoveCmd: /doufmove
 ## X-MoveTitle: oUF Drak Position
@@ -27,5 +29,3 @@ Libs\libs.xml
 Features\module.xml
 Elements\module.xml
 oUF_Drak.xml
-
-#Embeds\oUF_MovableFrames\movable.lua
