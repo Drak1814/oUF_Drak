@@ -26,7 +26,7 @@ local debug = ns.debug
 
 -- dependency check
 
-assert(oUF, _name .. " was unable to locate oUF install.")
+assert(dUF, _name .. " was unable to locate dUF install.")
 
 ns.fontstrings = {}
 ns.statusbars = {}
@@ -36,21 +36,21 @@ ns.grabberPool = {}
 --	Colors
 ------------------------------------------------------------------------
 
-oUF.colors.fallback = { 1, 1, 0.8 }
-oUF.colors.uninterruptible = { 1, 0.7, 0 }
+dUF.colors.fallback = { 1, 1, 0.8 }
+dUF.colors.uninterruptible = { 1, 0.7, 0 }
 
-oUF.colors.threat = {}
+dUF.colors.threat = {}
 for i = 1, 3 do
 	local r, g, b = GetThreatStatusColor(i)
-	oUF.colors.threat[i] = { r, g, b }
+	dUF.colors.threat[i] = { r, g, b }
 end
 
 do
-	local pcolor = oUF.colors.power
+	local pcolor = dUF.colors.power
 	pcolor.MANA[1], pcolor.MANA[2], pcolor.MANA[3] = 0, 0.8, 1
 	pcolor.RUNIC_POWER[1], pcolor.RUNIC_POWER[2], pcolor.RUNIC_POWER[3] = 0.8, 0, 1
 
-	local rcolor = oUF.colors.reaction
+	local rcolor = dUF.colors.reaction
 	rcolor[1][1], rcolor[1][2], rcolor[1][3] = 1, 0.2, 0.2 -- Hated
 	rcolor[2][1], rcolor[2][2], rcolor[2][3] = 1, 0.2, 0.2 -- Hostile
 	rcolor[3][1], rcolor[3][2], rcolor[3][3] = 1, 0.6, 0.2 -- Unfriendly
@@ -168,8 +168,8 @@ function Loader:ADDON_LOADED(event, addon)
 	self:RegisterEvent("PLAYER_LOGOUT")
 
 	-- Go
-	oUF:RegisterInitCallback(ns.restorePosition)
-	oUF:Factory(ns.Factory)
+	dUF:RegisterInitCallback(ns.restorePosition)
+	dUF:Factory(ns.Factory)
 	
 	-- Startup events
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -278,7 +278,7 @@ function Loader:PLAYER_REGEN_DISABLED(event)
 	debug(event)
 	if ns.anchor then
 		print("Anchors hidden due to combat.")
-		for k, bdrop in next, backdropPool do
+		for _, bdrop in next, ns.grabberPool do
 			bdrop:Hide()
 		end
 		ns.anchor = nil
@@ -346,8 +346,8 @@ function Loader:MODIFIER_STATE_CHANGED(event, key, state)
 		else
 			a, b = "__CustomFilter", "CustomFilter"
 		end
-		for i = 1, #oUF.objects do
-			local object = oUF.objects[i]
+		for i = 1, #dUF.objects do
+			local object = dUF.objects[i]
 			local buffs = object.Auras or object.Buffs
 			if buffs and buffs[a] then
 				buffs[b] = buffs[a]
@@ -904,7 +904,7 @@ function ns.ToggleGrabbers()
 	debug("ToggleGrabbers")
 	
 	if not ns.anchor then
-		for k, obj in next, oUF.objects do
+		for k, obj in next, dUF.objects do
 			local unit, isHeader = ns.getObjectInfo(obj)
 			if unit then
 				local grabber = ns.getGrabber(obj, isHeader)

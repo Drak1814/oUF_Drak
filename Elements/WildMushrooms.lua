@@ -130,4 +130,4 @@ function Disable(self)
 	TotemFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
 end
 
-oUF:AddElement("WildMushrooms", Path, Enable, Disable)
+dUF:AddElement("WildMushrooms", Path, Enable, Disable)

@@ -55,7 +55,7 @@ local colors = {
 	RELFECT   = { 1, 1, 1 },
 	RESIST    = { 0.8, 0.8, 0.8 },
 }
-oUF.colors.combatfeedback = colors
+dUF.colors.combatfeedback = colors
 
 ------------------------------------------------------------------------
 
@@ -183,4 +183,4 @@ local Disable = function(self)
 	active[element] = nil
 end
 
-oUF:AddElement("CombatText", Update, Enable, Disable)
+dUF:AddElement("CombatText", Update, Enable, Disable)

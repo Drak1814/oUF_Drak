@@ -18,8 +18,8 @@ local METAMORPHOSIS_FORM = 22
 local SPEC_WARLOCK_DEMONOLOGY = SPEC_WARLOCK_DEMONOLOGY
 local SPELL_POWER_DEMONIC_FURY = SPELL_POWER_DEMONIC_FURY
 
-oUF.colors.power.DEMONIC_FURY = { 132/255, 41/255, 235/255 }
-oUF.colors.power.METAMORPHOSIS = { 132/255, 235/255, 41/255 }
+dUF.colors.power.DEMONIC_FURY = { 132/255, 41/255, 235/255 }
+dUF.colors.power.METAMORPHOSIS = { 132/255, 235/255, 41/255 }
 
 local UpdateVisibility, Update, Path, ForceUpdate, Enable, Disable
 
@@ -52,7 +52,7 @@ function Update(self, event, unit, powerType)
 	local fury = UnitPower("player", SPELL_POWER_DEMONIC_FURY)
 	local maxFury = UnitPowerMax("player", SPELL_POWER_DEMONIC_FURY)
 	local inMetamorphosis = GetShapeshiftFormID() == METAMORPHOSIS_FORM
-	local color = oUF.colors.power[inMetamorphosis and "METAMORPHOSIS" or "DEMONIC_FURY"]
+	local color = dUF.colors.power[inMetamorphosis and "METAMORPHOSIS" or "DEMONIC_FURY"]
 	local r, g, b = color[1], color[2], color[3]
 
 	element:SetMinMaxValues(0, maxFury)
@@ -111,4 +111,4 @@ function Disable(self)
 	element:Hide()
 end
 
-oUF:AddElement("DemonicFury", Path, Enable, Disable)
+dUF:AddElement("DemonicFury", Path, Enable, Disable)

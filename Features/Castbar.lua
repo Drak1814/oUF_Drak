@@ -5,7 +5,7 @@
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------]]
 local _, ns = ...
-local colors = oUF.colors
+local colors = dUF.colors
 local _, playerClass = UnitClass("player")
 
 local colorOrange = colors.reaction[3]

@@ -11,7 +11,7 @@ if select(2, UnitClass("player")) ~= "DEATHKNIGHT" then return end
 
 local _, ns = ...
 
-local colors = oUF.colors.runes
+local colors = dUF.colors.runes
 colors[1][1], colors[1][2], colors[1][3] = 0.8, 0.2, 0.2 -- Blood
 colors[3][1], colors[3][2], colors[3][3] = 0,   0.8, 1   -- Frost
 colors[2][1], colors[2][2], colors[2][3] = 0.3, 0.9, 0   -- Unholy
@@ -19,8 +19,8 @@ colors[4][1], colors[4][2], colors[4][3] = 0.8, 0.5, 1   -- Death
 
 local Runes
 
-local ColorGradient = oUF.ColorGradient
-local SMOOTH_COLORS = oUF.colors.smooth
+local ColorGradient = dUF.ColorGradient
+local SMOOTH_COLORS = dUF.colors.smooth
 local unpack = unpack
 
 local function Rune_OnUpdate(bar, elapsed)

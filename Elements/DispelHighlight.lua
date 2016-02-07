@@ -38,7 +38,7 @@ local colors = { -- these are nicer than DebuffTypeColor
 	["Magic"] = { 0, 0.8, 1 },
 	["Poison"] = { 0, 0.8, 0 },
 }
-oUF.colors.debuff = colors
+dUF.colors.debuff = colors
 
 local INVULNERABILITY_EFFECTS = {
 	-- Player abilities
@@ -150,7 +150,7 @@ local function Disable(self)
 	element:Hide()
 end
 
-oUF:AddElement("DispelHighlight", Update, Enable, Disable)
+dUF:AddElement("DispelHighlight", Update, Enable, Disable)
 
 ------------------------------------------------------------------------
 
@@ -237,8 +237,8 @@ f:SetScript("OnEvent", function(self, event)
 	print("Can steal?", canSteal and "YES" or "NO")
 	print("Can tranquilize?", canTranq and "YES" or "NO")
 ]]
-	for i = 1, #oUF.objects do
-		local object = oUF.objects[i]
+	for i = 1, #dUF.objects do
+		local object = dUF.objects[i]
 		if object.DispelHighlight and object:IsShown() then
 			Update(object, event, object.unit)
 		end

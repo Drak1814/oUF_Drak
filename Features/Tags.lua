@@ -12,26 +12,26 @@ local GetLootMethod, IsResting, UnitAffectingCombat, UnitBuff, UnitClass, UnitIn
 ------------------------------------------------------------------------
 --	Colors
 
-oUF.Tags.Events["unitcolor"] = "UNIT_HEALTH UNIT_CLASSIFICATION_CHANGED UNIT_CONNECTION UNIT_FACTION UNIT_REACTION"
-oUF.Tags.Methods["unitcolor"] = function(unit)
+dUF.Tags.Events["unitcolor"] = "UNIT_HEALTH UNIT_CLASSIFICATION_CHANGED UNIT_CONNECTION UNIT_FACTION UNIT_REACTION"
+dUF.Tags.Methods["unitcolor"] = function(unit)
 	local color
 	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
-		color = oUF.colors.disconnected
+		color = dUF.colors.disconnected
 	elseif UnitIsPlayer(unit) then
 		local _, class = UnitClass(unit)
-		color = oUF.colors.class[class]
+		color = dUF.colors.class[class]
 	elseif UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) and not UnitIsTappedByAllThreatList(unit) then
-		color = oUF.colors.tapped
+		color = dUF.colors.tapped
 	elseif UnitIsEnemy(unit, "player") then
-		color = oUF.colors.reaction[1]
+		color = dUF.colors.reaction[1]
 	else
-		color = oUF.colors.reaction[UnitReaction(unit, "player") or 5]
+		color = dUF.colors.reaction[UnitReaction(unit, "player") or 5]
 	end
 	return color and ("|cff%02x%02x%02x"):format(color[1] * 255, color[2] * 255, color[3] * 255) or "|cffffffff"
 end
 
-oUF.Tags.Events["powercolor"] = "UNIT_DISPLAYPOWER"
-oUF.Tags.Methods["powercolor"] = function(unit)
+dUF.Tags.Events["powercolor"] = "UNIT_DISPLAYPOWER"
+dUF.Tags.Methods["powercolor"] = function(unit)
 	local _, type = UnitPowerType(unit)
 	local color = ns.colors.power[type] or ns.colors.power.FUEL
 	return format("|cff%02x%02x%02x", color[1] * 255, color[2] * 255, color[3] * 255)
@@ -40,18 +40,18 @@ end
 ------------------------------------------------------------------------
 --	Icons
 
-oUF.Tags.Events["combaticon"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED"
-oUF.Tags.SharedEvents["PLAYER_REGEN_DISABLED"] = true
-oUF.Tags.SharedEvents["PLAYER_REGEN_ENABLED"] = true
-oUF.Tags.Methods["combaticon"] = function(unit)
+dUF.Tags.Events["combaticon"] = "PLAYER_REGEN_DISABLED PLAYER_REGEN_ENABLED"
+dUF.Tags.SharedEvents["PLAYER_REGEN_DISABLED"] = true
+dUF.Tags.SharedEvents["PLAYER_REGEN_ENABLED"] = true
+dUF.Tags.Methods["combaticon"] = function(unit)
 	if unit == "player" and UnitAffectingCombat("player") then
 		return [[|TInterface\CharacterFrame\UI-StateIcon:0:0:0:0:64:64:37:58:5:26|t]]
 	end
 end
 
-oUF.Tags.Events["leadericon"] = "GROUP_ROSTER_UPDATE"
-oUF.Tags.SharedEvents["GROUP_ROSTER_UPDATE"] = true
-oUF.Tags.Methods["leadericon"] = function(unit)
+dUF.Tags.Events["leadericon"] = "GROUP_ROSTER_UPDATE"
+dUF.Tags.SharedEvents["GROUP_ROSTER_UPDATE"] = true
+dUF.Tags.Methods["leadericon"] = function(unit)
 	if UnitIsGroupLeader(unit) then
 		return [[|TInterface\GroupFrame\UI-Group-LeaderIcon:0|t]]
 	elseif UnitInRaid(unit) and UnitIsGroupAssistant(unit) then
@@ -59,10 +59,10 @@ oUF.Tags.Methods["leadericon"] = function(unit)
 	end
 end
 
-oUF.Tags.Events["mastericon"] = "PARTY_LOOT_METHOD_CHANGED GROUP_ROSTER_UPDATE"
-oUF.Tags.SharedEvents["PARTY_LOOT_METHOD_CHANGED"] = true
-oUF.Tags.SharedEvents["GROUP_ROSTER_UPDATE"] = true
-oUF.Tags.Methods["mastericon"] = function(unit)
+dUF.Tags.Events["mastericon"] = "PARTY_LOOT_METHOD_CHANGED GROUP_ROSTER_UPDATE"
+dUF.Tags.SharedEvents["PARTY_LOOT_METHOD_CHANGED"] = true
+dUF.Tags.SharedEvents["GROUP_ROSTER_UPDATE"] = true
+dUF.Tags.Methods["mastericon"] = function(unit)
 	local method, pid, rid = GetLootMethod()
 	if method ~= "master" then return end
 	local munit
@@ -80,15 +80,15 @@ oUF.Tags.Methods["mastericon"] = function(unit)
 	end
 end
 
-oUF.Tags.Events["restingicon"] = "PLAYER_UPDATE_RESTING"
-oUF.Tags.SharedEvents["PLAYER_UPDATE_RESTING"] = true
-oUF.Tags.Methods["restingicon"] = function(unit)
+dUF.Tags.Events["restingicon"] = "PLAYER_UPDATE_RESTING"
+dUF.Tags.SharedEvents["PLAYER_UPDATE_RESTING"] = true
+dUF.Tags.Methods["restingicon"] = function(unit)
 	if unit == "player" and IsResting() then
 		return [[|TInterface\CharacterFrame\UI-StateIcon:0:0:0:-6:64:64:28:6:6:28|t]]
 	end
 end
 
-oUF.Tags.Methods["battlepeticon"] = function(unit)
+dUF.Tags.Methods["battlepeticon"] = function(unit)
 	if UnitIsWildBattlePet(unit) or UnitIsBattlePetCompanion(unit) then
 		local petType = UnitBattlePetType(unit)
 		return [[|TInterface\TargetingFrame\PetBadge-]] .. PET_TYPE_SUFFIX[petType]
@@ -105,8 +105,8 @@ do
 		[2] = "|cffff9933",
 		[3] = "|cffff3333",
 	}
-	oUF.Tags.Events["threatpct"] = "UNIT_THREAT_LIST_UPDATE"
-	oUF.Tags.Methods["threatpct"] = function(unit)
+	dUF.Tags.Events["threatpct"] = "UNIT_THREAT_LIST_UPDATE"
+	dUF.Tags.Methods["threatpct"] = function(unit)
 		local isTanking, status, percentage, rawPercentage = UnitDetailedThreatSituation("player", unit)
 		local pct = rawPercentage
 		if isTanking then
@@ -124,8 +124,8 @@ end
 do
 	local EVANGELISM = GetSpellInfo(81661) -- 81660 for rank 1
 	local DARK_EVANGELISM = GetSpellInfo(87118) -- 87117 for rank 1
-	oUF.Tags.Events["evangelism"] = "UNIT_AURA"
-	oUF.Tags.Methods["evangelism"] = function(unit)
+	dUF.Tags.Events["evangelism"] = "UNIT_AURA"
+	dUF.Tags.Methods["evangelism"] = function(unit)
 		if unit == "player" then
 			local name, _, icon, count = UnitBuff("player", EVANGELISM)
 			if name then return count end
@@ -138,8 +138,8 @@ end
 
 do
 	local MAELSTROM_WEAPON = GetSpellInfo(53817)
-	oUF.Tags.Events["maelstrom"] = "UNIT_AURA"
-	oUF.Tags.Methods["maelstrom"] = function(unit)
+	dUF.Tags.Events["maelstrom"] = "UNIT_AURA"
+	dUF.Tags.Methods["maelstrom"] = function(unit)
 		if unit == "player" then
 			local name, _, icon, count = UnitBuff("player", MAELSTROM_WEAPON)
 			return name and count
@@ -162,8 +162,8 @@ do
 		return format("|cff7cbdff%d|r", i)
 	end })
 
-	oUF.Tags.Events["elementalshield"] = "UNIT_AURA"
-	oUF.Tags.Methods["elementalshield"] = function(unit)
+	dUF.Tags.Events["elementalshield"] = "UNIT_AURA"
+	dUF.Tags.Methods["elementalshield"] = function(unit)
 		local name, _, icon, count = UnitBuff(unit, EARTH_SHIELD, nil, "PLAYER")
 		if name then
 			return EARTH_TEXT[count]

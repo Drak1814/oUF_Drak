@@ -11,7 +11,7 @@ local _, ns = ...
 local BurningEmbers
 
 local color = { 1, 0.6, 0.2 }
-oUF.colors.power.BURNING_EMBERS = color
+dUF.colors.power.BURNING_EMBERS = color
 
 local function BurningEmbers_PostUpdate(element, embers, embersMax, powerType)
 	local total = 0

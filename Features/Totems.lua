@@ -17,10 +17,10 @@ local TOTEM_COLORS = {
 	[3] = { 0.2, 0.8, 1   }, -- Water
 	[4] = { 0.8, 0.4, 1   }, -- Air
 }
-oUF.colors.totems = TOTEM_COLORS
+dUF.colors.totems = TOTEM_COLORS
 
-local ColorGradient = oUF.ColorGradient
-local SMOOTH_COLORS = oUF.colors.smooth
+local ColorGradient = dUF.ColorGradient
+local SMOOTH_COLORS = dUF.colors.smooth
 local SecondsToTimeAbbrev = SecondsToTimeAbbrev
 local unpack = unpack
 

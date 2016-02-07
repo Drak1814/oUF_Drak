@@ -153,4 +153,4 @@ function Disable(self)
 	end
 end
 
-oUF:AddElement("AuraStack", Path, Enable, Disable)
+dUF:AddElement("AuraStack", Path, Enable, Disable)

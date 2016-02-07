@@ -7,8 +7,8 @@
 
 if select(2, UnitClass("player")) ~= "DRUID" then return end
 
-oUF.colors.power.ECLIPSE_LUNAR = { 0, 0.6, 1 }
-oUF.colors.power.ECLIPSE_SOLAR = { 0.8, 0.5, 0 }
+dUF.colors.power.ECLIPSE_LUNAR = { 0, 0.6, 1 }
+dUF.colors.power.ECLIPSE_SOLAR = { 0.8, 0.5, 0 }
 
 local _, ns = ...
 local EclipseBar
@@ -16,8 +16,8 @@ local EclipseBar
 local ECLIPSE_MARKER_COORDS = ECLIPSE_MARKER_COORDS
 local SPELL_POWER_ECLIPSE = SPELL_POWER_ECLIPSE
 
-local LUNAR_COLOR = oUF.colors.power.ECLIPSE_LUNAR
-local SOLAR_COLOR = oUF.colors.power.ECLIPSE_SOLAR
+local LUNAR_COLOR = dUF.colors.power.ECLIPSE_LUNAR
+local SOLAR_COLOR = dUF.colors.power.ECLIPSE_SOLAR
 
 local BRIGHT = 1.2
 local NORMAL = 0.8

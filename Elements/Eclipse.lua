@@ -116,4 +116,4 @@ function Disable(self)
 	self:UnregisterEvent("UNIT_EXITED_VEHICLE", UpdateVisibility)
 end
 
-oUF:AddElement("Eclipse", Path, Enable, Disable)
+dUF:AddElement("Eclipse", Path, Enable, Disable)

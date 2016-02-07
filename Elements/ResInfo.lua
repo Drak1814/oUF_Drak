@@ -77,13 +77,13 @@ function Disable(self)
 	element:Hide()
 end
 
-oUF:AddElement("ResInfo", Update, Enable, Disable)
+dUF:AddElement("ResInfo", Update, Enable, Disable)
 
 ------------------------------------------------------------------------
 
 local function Callback(event, unit, guid)
-	for i = 1, #oUF.objects do
-		local frame = oUF.objects[i]
+	for i = 1, #dUF.objects do
+		local frame = dUF.objects[i]
 		if frame.unit and frame.ResInfo then
 			Update(frame, event, frame.unit)
 		end

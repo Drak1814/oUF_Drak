@@ -7,7 +7,7 @@
 
 local _, ns = ...
 local _, playerClass = UnitClass("player")
-local colors = oUF.colors
+local colors = dUF.colors
 
 local function noop() end
 local debug = ns.debug
@@ -338,7 +338,7 @@ local function Spawn(self, unit, isSingle)
 		local el = ns.Orbs.Create(self.overlay, 6, 20) -- TODO: switch to multibar?
 		el.powerType = powerType
 		--el.Override = updateFunc
-		el.UpdateTexture = noop -- fuck off oUF >:(
+		el.UpdateTexture = noop
 		self[element] = el
 
 		local function SetAlpha(self, alpha)
@@ -491,13 +491,13 @@ local function Spawn(self, unit, isSingle)
 		otherPower.bg.multiplier = config.powerBG
 
 		if playerClass == "WARLOCK" then
-			local color = oUF.colors.power.DEMONIC_FURY
+			local color = dUF.colors.power.DEMONIC_FURY
 			otherPower.value:SetTextColor(color[1], color[2], color[3])
 			otherPower.PostUpdate = ns.DemonicFury_PostUpdate
 			self.DemonicFury = otherPower
 
 		elseif playerClass == "DRUID" then
-			local color = oUF.colors.power.MANA
+			local color = dUF.colors.power.MANA
 			otherPower.value:SetTextColor(color[1], color[2], color[3])
 			otherPower.PostUpdate = ns.DruidMana_PostUpdate
 			self.DruidMana = otherPower
@@ -756,16 +756,16 @@ end
 
 -- Magic Time!
 
-function ns.Factory(oUF)
+function ns.Factory(dUF)
 	local config = ns.config
 	local uconfig = ns.uconfig
 	
 	-- DO NOT hide Blizzard frames
-	local DisableBlizzard = oUF.DisableBlizzard
-	function oUF:DisableBlizzard(unit) end
+	local DisableBlizzard = dUF.DisableBlizzard
+	function dUF:DisableBlizzard(unit) end
 
-	oUF:RegisterStyle(ns.toc.style, Spawn)
-	oUF:SetActiveStyle(ns.toc.style)
+	dUF:RegisterStyle(ns.toc.style, Spawn)
+	dUF:SetActiveStyle(ns.toc.style)
 
 	local initialConfigFunction = [[
 		self:SetAttribute("initial-width", %d)
@@ -782,12 +782,12 @@ function ns.Factory(oUF)
 					debug("Creating Header", name)
 					local w = config.width  * (udata.width  or 1)
 					local h = config.height * (udata.height or 1)
-					ns.headers[unit] = oUF:SpawnHeader(name, nil, udata.visible,
-						"oUF-initialConfigFunction", format(initialConfigFunction, w, h, w, h),
+					ns.headers[unit] = dUF:SpawnHeader(name, nil, udata.visible,
+						"dUF-initialConfigFunction", format(initialConfigFunction, w, h, w, h),
 						unpack(udata.attributes))
 				else
 					debug("Creating Frame", name)
-					local frame = oUF:Spawn(unit, name)
+					local frame = dUF:Spawn(unit, name)
 					frame:SetParent(oUFDrak_CombatShowFrame)
 					ns.frames[unit] = frame
 				end
@@ -795,7 +795,7 @@ function ns.Factory(oUF)
 		end
 	end
 
-	oUF.DisableBlizzard = DisableBlizzard
+	dUF.DisableBlizzard = DisableBlizzard
 	
 	for unit, object in pairs(ns.frames) do
 		local udata = uconfig[unit]

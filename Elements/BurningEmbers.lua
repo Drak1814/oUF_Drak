@@ -168,4 +168,4 @@ function Disable(self)
 	end
 end
 
-oUF:AddElement("BurningEmbers", Path, Enable, Disable)
+dUF:AddElement("BurningEmbers", Path, Enable, Disable)

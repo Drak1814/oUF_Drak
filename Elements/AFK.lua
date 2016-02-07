@@ -91,4 +91,4 @@ local function Disable(self)
 	element:Hide()
 end
 
-oUF:AddElement("AFK", Update, Enable, Disable)
+dUF:AddElement("AFK", Update, Enable, Disable)

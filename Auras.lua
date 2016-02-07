@@ -957,7 +957,7 @@ ns.UpdateAuraList = function()
 	end
 
 	-- Update all the things
-	for _, obj in pairs(oUF.objects) do
+	for _, obj in pairs(dUF.objects) do
 		if obj.Auras then
 			obj.Auras:ForceUpdate()
 		end

@@ -7,7 +7,7 @@
 
 local _, ns = ...
 local _, playerClass = UnitClass("player")
-local colors = oUF.colors
+local colors = dUF.colors
 local noop = function() return end
 local playerUnits = { player = true, pet = true, vehicle = true }
 local si = ns.si
