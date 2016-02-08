@@ -1,7 +1,5 @@
 --[[--------------------------------------------------------------------
 	oUF_Drak
-	oUF-based Combat HUD for PvE.
-	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to display burning embers on oUF frames.
@@ -11,8 +9,6 @@
 ----------------------------------------------------------------------]]
 
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "BurningEmbers element requires oUF")
 
 local MAX_POWER_PER_EMBER = MAX_POWER_PER_EMBER
 local SPEC_WARLOCK_DESTRUCTION = SPEC_WARLOCK_DESTRUCTION

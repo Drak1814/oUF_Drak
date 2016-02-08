@@ -16,8 +16,6 @@
 ----------------------------------------------------------------------]]
 
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "ResInfo element requires oUF")
 
 local LibResInfo = LibStub("LibResInfo-1.0", true)
 assert(LibResInfo, "ResInfo element requires LibResInfo-1.0")

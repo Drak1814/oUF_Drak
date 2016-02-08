@@ -1,7 +1,5 @@
 --[[--------------------------------------------------------------------
 	oUF_Drak
-	oUF-based Combat HUD for PvE.
-	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to display combat feedback text on oUF frames.
@@ -24,13 +22,7 @@
 	}
 ----------------------------------------------------------------------]]
 
-if select(4, GetAddOnInfo("oUF_CombatFeedback")) then
-	DisableAddOn("oUF_CombatFeedback")
-end
-
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "CombatText element requires oUF")
 
 ------------------------------------------------------------------------
 

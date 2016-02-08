@@ -1,7 +1,5 @@
 --[[--------------------------------------------------------------------
 	oUF_Drak
-	oUF-based Combat HUD for PvE.
-	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to display demonic fury on oUF frames.
@@ -11,8 +9,6 @@
 ----------------------------------------------------------------------]]
 
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "Eclipse element requires oUF")
 
 local colors = {
 	sun  = { 132/255, 41/255, 235/255 },

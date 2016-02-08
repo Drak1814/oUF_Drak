@@ -20,8 +20,6 @@
 ----------------------------------------------------------------------]]
 
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "oUF_WildMushrooms requires oUF")
 
 local UpdateVisibility, Update, Path, ForceUpdate, Enable, Disable
 

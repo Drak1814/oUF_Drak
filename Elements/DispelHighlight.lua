@@ -1,7 +1,5 @@
 --[[--------------------------------------------------------------------
 	oUF_Drak
-	oUF-based Combat HUD for PvE.
-	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to highlight oUF frames by dispellable debuff type.
@@ -22,11 +20,7 @@
 	frame.DispelHighlight.Override = function(element, debuffType, canDispel)
 ----------------------------------------------------------------------]]
 
-if select(4, GetAddOnInfo("oUF_DebuffHighlight")) then return end
-
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "DispelHighlight element requires oUF")
 
 local _, playerClass = UnitClass("player")
 

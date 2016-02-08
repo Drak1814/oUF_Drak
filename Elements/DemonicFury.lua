@@ -1,7 +1,5 @@
 --[[--------------------------------------------------------------------
 	oUF_Drak
-	oUF-based Combat HUD for PvE.
-	Copyright (c) 2016 Drak <drak@derpydo.com>. All rights reserved.
 	https://github.com/Drak1814/oUF_Drak
 ----------------------------------------------------------------------
 	Element to display demonic fury on oUF frames.
@@ -11,8 +9,6 @@
 ----------------------------------------------------------------------]]
 
 local _, ns = ...
-local oUF = ns.oUF or oUF
-assert(oUF, "DemonicFury element requires oUF")
 
 local METAMORPHOSIS_FORM = 22
 local SPEC_WARLOCK_DEMONOLOGY = SPEC_WARLOCK_DEMONOLOGY
