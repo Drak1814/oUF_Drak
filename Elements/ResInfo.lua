@@ -90,8 +90,8 @@ local function Callback(event, unit, guid)
 	end
 end
 
-LibResInfo.RegisterCallback("oUF_ResInfo", "LibResInfo_ResCastStarted", Callback)
-LibResInfo.RegisterCallback("oUF_ResInfo", "LibResInfo_ResCastCancelled", Callback)
-LibResInfo.RegisterCallback("oUF_ResInfo", "LibResInfo_ResPending", Callback)
-LibResInfo.RegisterCallback("oUF_ResInfo", "LibResInfo_ResUsed", Callback)
-LibResInfo.RegisterCallback("oUF_ResInfo", "LibResInfo_ResExpired", Callback)
+LibResInfo.RegisterCallback("dUF_ResInfo", "LibResInfo_ResCastStarted", Callback)
+LibResInfo.RegisterCallback("dUF_ResInfo", "LibResInfo_ResCastCancelled", Callback)
+LibResInfo.RegisterCallback("dUF_ResInfo", "LibResInfo_ResPending", Callback)
+LibResInfo.RegisterCallback("dUF_ResInfo", "LibResInfo_ResUsed", Callback)
+LibResInfo.RegisterCallback("dUF_ResInfo", "LibResInfo_ResExpired", Callback)
