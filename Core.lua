@@ -670,86 +670,15 @@ function ns.saveUnitPosition(unit, point, x, y, scale)
 end
 ]=]
 
--- Attempt to figure out a more sane name to display
-ns.nameCache = {}
+-- Attempt to figure out a sane name to display
 function ns.smartName(obj, header)
-	local validNames = {
-		'player',
-		'pet',
-		'focus',
-		'focustarget',
-		'target',
-		'targettarget'
-	}
-	
-	local function validName(smartName)
-		-- Not really a valid name, but we'll accept it for simplicities sake.
-		if tonumber(smartName) then
-			return smartName
-		end
-
-		if type(smartName) == 'string' then
-			-- strip away trailing s from pets, but don't touch boss/focus.
-			smartName = smartName:gsub('([^us])s$', '%1')
-
-			for _, v in pairs(validNames) do
-				if(v == smartName) then	return smartName end
-			end
-
-			if(
-				smartName:match'^party%d?$' or
-				smartName:match'^arena%d?$' or
-				smartName:match'^boss%d?$' or
-				smartName:match'^partypet%d?$' or
-				smartName:match'^raid%d?%d?$' or
-				smartName:match'%w+target$' or
-				smartName:match'%w+pet$'
-				) then
-				return smartName
-			end
-		end
-	end
-
-	local function guessName(...)
-		local name = validName(select(1, ...))
-		local n = select('#', ...)
-		if n > 1 then
-			for i=2, n do
-				local inp = validName(select(i, ...))
-				if inp then	name = (name or '') .. inp end
-			end
-		end
-		return name
-	end
-
-	local function smartString(name)
-		if ns.nameCache[name] then return ns.nameCache[name] end
-
-		-- Here comes the substitute train!
-		local n = name
-			:gsub('ToT', 'targettarget')
-			:gsub('(%l)(%u)', '%1_%2')
-			:gsub('([%l%u])(%d)', '%1_%2_')
-			:gsub('Main_', 'Main')
-			:lower()
-
-		n = guessName(string.split('_', n))
-		if n then
-			ns.nameCache[name] = n
-			return n
-		end
-
-		return name
-	end
-
 	if type(obj) == 'string' then
-		return smartString(obj)
+		return obj
 	elseif header then
-		return smartString(header:GetName())
+		return header:GetName()
 	else
-		local name = obj:GetName()
-		if name then return smartString(name) end
-		return obj.unit or '<unknown>'
+		if obj.unit then return obj.unit end
+		return obj:GetName()
 	end
 end
 
